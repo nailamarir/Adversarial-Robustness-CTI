@@ -1,0 +1,86 @@
+{
+  "table3": {
+    "Total Samples": 5231,
+    "Training Set": "2423 (46%)",
+    "Validation Set": "890 (17%)",
+    "Test Set": "1918 (37%)",
+    "Number of Classes": "16 (MITRE Tactics)",
+    "Avg. Text Length": "32 tokens",
+    "Adversarial Pool": "500 samples"
+  },
+  "table5": {
+    "Full Adv. Train": {
+      "clean_accuracy_mean": 0.704,
+      "clean_accuracy_std": 0.0,
+      "robust_accuracy_mean": 0.0,
+      "robust_accuracy_std": 0.0,
+      "attack_success_rate_mean": 1.0,
+      "attack_success_rate_std": 0.0,
+      "f1_macro_mean": 0.38291131257906064,
+      "f1_macro_std": 0.0,
+      "samples_used_mean": 484.0,
+      "samples_used_std": 0.0
+    },
+    "AL-Entropy": {
+      "clean_accuracy_mean": 0.658,
+      "clean_accuracy_std": 0.0,
+      "robust_accuracy_mean": 0.0,
+      "robust_accuracy_std": 0.0,
+      "attack_success_rate_mean": 1.0,
+      "attack_success_rate_std": 0.0,
+      "f1_macro_mean": 0.3384224673498524,
+      "f1_macro_std": 0.0,
+      "samples_used_mean": 50.0,
+      "samples_used_std": 0.0
+    },
+    "No Adv. Train": {
+      "clean_accuracy_mean": 0.604,
+      "clean_accuracy_std": 0.0,
+      "robust_accuracy_mean": 0.0,
+      "robust_accuracy_std": 0.0,
+      "attack_success_rate_mean": 1.0,
+      "attack_success_rate_std": 0.0,
+      "f1_macro_mean": 0.32709452067736805,
+      "f1_macro_std": 0.0,
+      "samples_used_mean": 0.0,
+      "samples_used_std": 0.0
+    },
+    "Margin": {
+      "clean_accuracy_mean": 0.662,
+      "clean_accuracy_std": 0.0,
+      "robust_accuracy_mean": 0.0,
+      "robust_accuracy_std": 0.0,
+      "attack_success_rate_mean": 1.0,
+      "attack_success_rate_std": 0.0,
+      "f1_macro_mean": 0.3494215206373668,
+      "f1_macro_std": 0.0,
+      "samples_used_mean": 50.0,
+      "samples_used_std": 0.0
+    },
+    "Random": {
+      "clean_accuracy_mean": 0.668,
+      "clean_accuracy_std": 0.0,
+      "robust_accuracy_mean": 0.0,
+      "robust_accuracy_std": 0.0,
+      "attack_success_rate_mean": 1.0,
+      "attack_success_rate_std": 0.0,
+      "f1_macro_mean": 0.3181056657088439,
+      "f1_macro_std": 0.0,
+      "samples_used_mean": 50.0,
+      "samples_used_std": 0.0
+    }
+  },
+  "seeds": [
+    42
+  ],
+  "config": {
+    "model": "jackaduma/SecBERT",
+    "max_length": 256,
+    "batch_size": 16,
+    "baseline_epochs": 2,
+    "al_budget": 50,
+    "al_iterations": 2,
+    "al_pool_size": 500,
+    "attack_samples": 500
+  }
+}

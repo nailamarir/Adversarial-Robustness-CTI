@@ -1,0 +1,86 @@
+{
+  "table3": {
+    "Total Samples": 5231,
+    "Training Set": "2423 (46%)",
+    "Validation Set": "890 (17%)",
+    "Test Set": "1918 (37%)",
+    "Number of Classes": "16 (MITRE Tactics)",
+    "Avg. Text Length": "1851 tokens",
+    "Adversarial Pool": "500 samples"
+  },
+  "table5": {
+    "Full Adv. Train": {
+      "clean_accuracy_mean": 0.555,
+      "clean_accuracy_std": 0.0,
+      "robust_accuracy_mean": 0.56,
+      "robust_accuracy_std": 0.0,
+      "attack_success_rate_mean": 0.0,
+      "attack_success_rate_std": 0.0,
+      "f1_macro_mean": 0.15460386510112814,
+      "f1_macro_std": 0.0,
+      "samples_used_mean": 500.0,
+      "samples_used_std": 0.0
+    },
+    "AL-Entropy": {
+      "clean_accuracy_mean": 0.555,
+      "clean_accuracy_std": 0.0,
+      "robust_accuracy_mean": 0.565,
+      "robust_accuracy_std": 0.0,
+      "attack_success_rate_mean": 0.009,
+      "attack_success_rate_std": 0.0,
+      "f1_macro_mean": 0.10757870351212445,
+      "f1_macro_std": 0.0,
+      "samples_used_mean": 100.0,
+      "samples_used_std": 0.0
+    },
+    "Random": {
+      "clean_accuracy_mean": 0.56,
+      "clean_accuracy_std": 0.0,
+      "robust_accuracy_mean": 0.575,
+      "robust_accuracy_std": 0.0,
+      "attack_success_rate_mean": 0.0089,
+      "attack_success_rate_std": 0.0,
+      "f1_macro_mean": 0.10716083829182385,
+      "f1_macro_std": 0.0,
+      "samples_used_mean": 100.0,
+      "samples_used_std": 0.0
+    },
+    "Margin": {
+      "clean_accuracy_mean": 0.535,
+      "clean_accuracy_std": 0.0,
+      "robust_accuracy_mean": 0.525,
+      "robust_accuracy_std": 0.0,
+      "attack_success_rate_mean": 0.0187,
+      "attack_success_rate_std": 0.0,
+      "f1_macro_mean": 0.10647396562159621,
+      "f1_macro_std": 0.0,
+      "samples_used_mean": 100.0,
+      "samples_used_std": 0.0
+    },
+    "No Adv. Train": {
+      "clean_accuracy_mean": 0.59,
+      "clean_accuracy_std": 0.0,
+      "robust_accuracy_mean": 0.59,
+      "robust_accuracy_std": 0.0,
+      "attack_success_rate_mean": 0.0,
+      "attack_success_rate_std": 0.0,
+      "f1_macro_mean": 0.09549735882976274,
+      "f1_macro_std": 0.0,
+      "samples_used_mean": 0.0,
+      "samples_used_std": 0.0
+    }
+  },
+  "seeds": [
+    42
+  ],
+  "config": {
+    "model": "distilbert-base-uncased",
+    "max_length": 256,
+    "batch_size": 16,
+    "baseline_epochs": 2,
+    "al_budget": 50,
+    "al_iterations": 2,
+    "al_pool_size": 500,
+    "attack_samples": 200
+  }
+}

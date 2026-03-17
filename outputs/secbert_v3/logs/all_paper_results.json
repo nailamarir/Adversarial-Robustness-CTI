@@ -1,0 +1,90 @@
+{
+  "table3": {
+    "Total Samples": 7054,
+    "Training Set": "4246 (60%)",
+    "Validation Set": "890 (13%)",
+    "Test Set": "1918 (27%)",
+    "Number of Classes": "16 (MITRE Tactics)",
+    "Avg. Text Length": "32 tokens",
+    "Adversarial Pool": "500 samples"
+  },
+  "table5": {
+    "Full Adv. Train": {
+      "clean_accuracy_mean": 0.7116,
+      "clean_accuracy_std": 0.02323445717033216,
+      "robust_accuracy_mean": 0.0008,
+      "robust_accuracy_std": 0.0016,
+      "attack_success_rate_mean": 0.9988919667590028,
+      "attack_success_rate_std": 0.0022160664819944388,
+      "f1_macro_mean": 0.5218754321675639,
+      "f1_macro_std": 0.03159660278730341,
+      "samples_used_mean": 175.6,
+      "samples_used_std": 24.335981591051553
+    },
+    "Random": {
+      "clean_accuracy_mean": 0.7127999999999999,
+      "clean_accuracy_std": 0.012432216214336054,
+      "robust_accuracy_mean": 0.002,
+      "robust_accuracy_std": 0.0021908902300206644,
+      "attack_success_rate_mean": 0.9972199999999999,
+      "attack_success_rate_std": 0.002994929047573576,
+      "f1_macro_mean": 0.5384905437269869,
+      "f1_macro_std": 0.03862061945892858,
+      "samples_used_mean": 90.0,
+      "samples_used_std": 37.416573867739416
+    },
+    "AL-Entropy": {
+      "clean_accuracy_mean": 0.7203999999999999,
+      "clean_accuracy_std": 0.0416538113502234,
+      "robust_accuracy_mean": 0.0012000000000000001,
+      "robust_accuracy_std": 0.0016,
+      "attack_success_rate_mean": 0.99832,
+      "attack_success_rate_std": 0.002172003683238119,
+      "f1_macro_mean": 0.44484371563181535,
+      "f1_macro_std": 0.022093066932781964,
+      "samples_used_mean": 70.0,
+      "samples_used_std": 40.0
+    },
+    "No Adv. Train": {
+      "clean_accuracy_mean": 0.7299999999999999,
+      "clean_accuracy_std": 0.011384199576606177,
+      "robust_accuracy_mean": 0.0016,
+      "robust_accuracy_std": 0.0019595917942265427,
+      "attack_success_rate_mean": 0.9977866556458649,
+      "attack_success_rate_std": 0.002711132167073349,
+      "f1_macro_mean": 0.5611717291551033,
+      "f1_macro_std": 0.03088405657176884,
+      "samples_used_mean": 0.0,
+      "samples_used_std": 0.0
+    },
+    "Margin": {
+      "clean_accuracy_mean": 0.7148000000000001,
+      "clean_accuracy_std": 0.047641998278829575,
+      "robust_accuracy_mean": 0.0024000000000000002,
+      "robust_accuracy_std": 0.00233238075793812,
+      "attack_success_rate_mean": 0.99664,
+      "attack_success_rate_std": 0.003151253718760194,
+      "f1_macro_mean": 0.44734959981807687,
+      "f1_macro_std": 0.028952173449477026,
+      "samples_used_mean": 70.0,
+      "samples_used_std": 40.0
+    }
+  },
+  "seeds": [
+    42,
+    123,
+    456,
+    789,
+    1024
+  ],
+  "config": {
+    "model": "jackaduma/SecBERT",
+    "max_length": 256,
+    "batch_size": 16,
+    "baseline_epochs": 15,
+    "al_budget": 50,
+    "al_iterations": 5,
+    "al_pool_size": 500,
+    "attack_samples": 500
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "system_start": "2026-03-13T20:13:06.069728",
+  "total_events": 6,
+  "events": [
+    {
+      "timestamp": "2026-03-13T20:13:06.069767",
+      "event_type": "system",
+      "agent": "Framework",
+      "action": "framework_started",
+      "details": {
+        "budget": 50,
+        "iterations": 1,
+        "strategy": "entropy",
+        "pool_size": 500
+      },
+      "iteration": 0
+    },
+    {
+      "timestamp": "2026-03-13T20:13:44.357800",
+      "event_type": "evaluation",
+      "agent": "AuditAgent",
+      "action": "robustness_evaluated",
+      "details": {
+        "iteration": 0,
+        "timestamp": "2026-03-13T20:13:44.357791",
+        "clean_accuracy": 0.578,
+        "robust_accuracy": 0.03,
+        "attack_success_rate": 0.9481,
+        "n_labeled_samples": 0
+      },
+      "iteration": 0
+    },
+    {
+      "timestamp": "2026-03-13T20:14:05.050971",
+      "event_type": "detection",
+      "agent": "DetectionAgent",
+      "action": "adversarial_pool_generated",
+      "details": {
+        "pool_size": 500,
+        "n_flagged": 500,
+        "flagged_by_method": {
+          "synonym": 500
+        }
+      },
+      "iteration": 0
+    },
+    {
+      "timestamp": "2026-03-13T20:14:11.676688",
+      "event_type": "selection",
+      "agent": "SelectionAgent",
+      "action": "samples_selected",
+      "details": {
+        "strategy": "entropy",
+        "pool_size": 500,
+        "budget": 50,
+        "n_selected": 50,
+        "entropy_stats": {
+          "mean": 1.8706269264221191,
+          "std": 0.04431525158020178,
+          "min": 1.8348239660263062,
+          "max": 2.0100388526916504
+        },
+        "top_sample_explanations": [
+          {
+            "rank": 1,
+            "label": "OTHER",
+            "entropy": 2.01,
+            "margin": 0.0102,
+            "detection_method": "synonym_low_confidence",
+            "confidence": 0.3007,
+            "reason": "Very high uncertainty (entropy=2.010); nearly equal top-2 class probabilities; low model confidence (0.301)"
+          },
+          {
+            "rank": 2,
+            "label": "OTHER",
+            "entropy": 2.01,
+            "margin": 0.0102,
+            "detection_method": "synonym_low_confidence",
+            "confidence": 0.3007,
+            "reason": "Very high uncertainty (entropy=2.010); nearly equal top-2 class probabilities; low model confidence (0.301)"
+          },
+          {
+            "rank": 3,
+            "label": "OTHER",
+            "entropy": 2.01,
+            "margin": 0.0102,
+            "detection_method": "synonym_low_confidence",
+            "confidence": 0.3021,
+            "reason": "Very high uncertainty (entropy=2.010); nearly equal top-2 class probabilities; low model confidence (0.302)"
+          },
+          {
+            "rank": 4,
+            "label": "OTHER",
+            "entropy": 2.01,
+            "margin": 0.0102,
+            "detection_method": "synonym_low_confidence",
+            "confidence": 0.3007,
+            "reason": "Very high uncertainty (entropy=2.010); nearly equal top-2 class probabilities; low model confidence (0.301)"
+          },
+          {
+            "rank": 5,
+            "label": "OTHER",
+            "entropy": 1.9107,
+            "margin": 0.1895,
+            "detection_method": "synonym_low_confidence",
+            "confidence": 0.3995,
+            "reason": "Very high uncertainty (entropy=1.911); small margin between top predictions; low model confidence (0.400)"
+          }
+        ]
+      },
+      "iteration": 1
+    },
+    {
+      "timestamp": "2026-03-13T20:14:41.166934",
+      "event_type": "retraining",
+      "agent": "RetrainingAgent",
+      "action": "model_fine_tuned",
+      "details": {
+        "n_samples": 50,
+        "epochs": 3,
+        "final_loss": 1.9146,
+        "dev_accuracy": 0.6157,
+        "dev_f1": 0.1046
+      },
+      "iteration": 1
+    },
+    {
+      "timestamp": "2026-03-13T20:15:19.275771",
+      "event_type": "evaluation",
+      "agent": "AuditAgent",
+      "action": "robustness_evaluated",
+      "details": {
+        "iteration": 1,
+        "timestamp": "2026-03-13T20:15:19.275759",
+        "clean_accuracy": 0.636,
+        "robust_accuracy": 0.624,
+        "attack_success_rate": 0.066,
+        "n_labeled_samples": 50,
+        "label_efficiency": 0.01188,
+        "delta_robust_accuracy": 0.594
+      },
+      "iteration": 1
+    }
+  ],
+  "robustness_timeline": [
+    {
+      "iteration": 0,
+      "timestamp": "2026-03-13T20:13:44.357791",
+      "clean_accuracy": 0.578,
+      "robust_accuracy": 0.03,
+      "attack_success_rate": 0.9481,
+      "n_labeled_samples": 0
+    },
+    {
+      "iteration": 1,
+      "timestamp": "2026-03-13T20:15:19.275759",
+      "clean_accuracy": 0.636,
+      "robust_accuracy": 0.624,
+      "attack_success_rate": 0.066,
+      "n_labeled_samples": 50,
+      "label_efficiency": 0.01188,
+      "delta_robust_accuracy": 0.594
+    }
+  ],
+  "iteration_summaries": [
+    {
+      "iteration": 1,
+      "n_events": 3,
+      "event_types": {
+        "selection": 1,
+        "retraining": 1,
+        "evaluation": 1
+      },
+      "robustness": {
+        "iteration": 1,
+        "timestamp": "2026-03-13T20:15:19.275759",
+        "clean_accuracy": 0.636,
+        "robust_accuracy": 0.624,
+        "attack_success_rate": 0.066,
+        "n_labeled_samples": 50,
+        "label_efficiency": 0.01188,
+        "delta_robust_accuracy": 0.594
+      }
+    }
+  ]
+}
