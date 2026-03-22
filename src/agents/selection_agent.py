@@ -15,6 +15,7 @@ import numpy as np
 import torch
 from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass
+from sklearn.metrics.pairwise import euclidean_distances
 
 from ..models.classifier import CTIClassifier
 from .detection_agent import AdversarialCandidate
@@ -22,10 +23,13 @@ from .detection_agent import AdversarialCandidate
 
 @dataclass
 class ScoredCandidate:
-    """An adversarial candidate scored by uncertainty."""
+    """An adversarial candidate scored by uncertainty and utility."""
     candidate: AdversarialCandidate
     entropy: float
     margin: float  # Difference between top-2 predicted class probabilities
+    utility: float = 0.0  # Adversarial Sample Utility (ASU)
+    loss: float = 0.0  # Cross-entropy loss on true label
+    confidence_flip: float = 0.0  # 1 - P(true_class)
     rank: int = 0
 
 
@@ -47,13 +51,15 @@ class SelectionAgent:
         classifier: CTIClassifier,
         budget_per_iteration: int = 50,
         strategy: str = "entropy",
-        max_length: int = 512
+        max_length: int = 512,
+        beta: float = 0.5,
     ):
         self.classifier = classifier
         self.budget = budget_per_iteration
         self.strategy = strategy
         self.max_length = max_length
         self.device = classifier.device
+        self.beta = beta  # Weight for margin in composite acquisition
 
         # Selection history
         self.selection_history: List[Dict] = []
@@ -79,20 +85,36 @@ class SelectionAgent:
             return float(sorted_probs[0] - sorted_probs[1])
         return float(sorted_probs[0])
 
+    def compute_utility(self, loss: float, confidence_flip: float, margin: float) -> float:
+        """
+        Compute Adversarial Sample Utility (ASU) — Eq. 8 in paper.
+
+        U(x_adv) = α·loss + β·(1 - P(y_true|x_adv)) + γ·(1 - margin)
+
+        High utility = sample that maximally shifts the decision boundary:
+        - High loss: model is wrong and penalized
+        - High confidence flip: model is confident in wrong class
+        - Low margin: near decision boundary between top classes
+        """
+        alpha, gamma = 0.4, 0.2  # beta is self.beta for margin weight
+        return alpha * loss + self.beta * confidence_flip + gamma * (1.0 - margin)
+
     def score_candidates(
         self,
         candidate_pool: List[AdversarialCandidate]
     ) -> List[ScoredCandidate]:
         """
-        Score all candidates in pool U by uncertainty.
+        Score all candidates in pool U by adversarial utility.
 
         For each adversarial candidate x in U:
         1. Compute softmax probabilities p = softmax(M_theta(x))
         2. Compute entropy H(x) = -sum(p_c * log(p_c))
         3. Compute margin = P(y1|x) - P(y2|x)
+        4. Compute loss = -log(P(y_true|x))
+        5. Compute utility U(x) = α·loss + β·confidence_flip + γ·(1-margin)
 
         Returns:
-            List of ScoredCandidate objects with entropy and margin scores.
+            List of ScoredCandidate objects with entropy, margin, and utility scores.
         """
         scored: List[ScoredCandidate] = []
         self.classifier.eval_mode()
@@ -106,10 +128,25 @@ class SelectionAgent:
             entropy = self.compute_entropy(probs_np)
             margin = self.compute_margin(probs_np)
 
+            # Compute loss and confidence flip for true label
+            true_label = candidate.true_label
+            if 0 <= true_label < len(probs_np):
+                p_true = float(np.clip(probs_np[true_label], 1e-10, 1.0))
+                loss = -np.log(p_true)
+                confidence_flip = 1.0 - p_true
+            else:
+                loss = 5.0  # max loss
+                confidence_flip = 1.0
+
+            utility = self.compute_utility(loss, confidence_flip, margin)
+
             scored.append(ScoredCandidate(
                 candidate=candidate,
                 entropy=entropy,
                 margin=margin,
+                utility=utility,
+                loss=loss,
+                confidence_flip=confidence_flip,
             ))
 
         return scored
@@ -150,6 +187,26 @@ class SelectionAgent:
                 key=lambda x: x.margin,
                 reverse=False  # Smallest margin first
             )
+        elif self.strategy == "composite":
+            # Adversarial Sample Utility — boundary-shifting score
+            # U(x) = α·loss + β·confidence_flip + γ·(1-margin)
+            sorted_candidates = sorted(
+                scored_candidates,
+                key=lambda x: x.utility,
+                reverse=True  # Highest utility first
+            )
+        elif self.strategy == "coreset":
+            # Core-Set: greedy k-center in probability space
+            sorted_candidates = self._coreset_selection(scored_candidates, B)
+        elif self.strategy == "entropy_coreset":
+            # Entropy + Core-Set: top-2B by entropy, then filter to B via k-center
+            entropy_sorted = sorted(
+                scored_candidates,
+                key=lambda x: x.entropy,
+                reverse=True
+            )
+            top_2b = entropy_sorted[:min(2 * B, len(entropy_sorted))]
+            sorted_candidates = self._coreset_selection(top_2b, B)
         elif self.strategy == "random":
             # Random baseline for comparison
             sorted_candidates = list(scored_candidates)
@@ -213,6 +270,39 @@ class SelectionAgent:
     def get_selection_history(self) -> List[Dict]:
         """Return selection history across iterations."""
         return self.selection_history.copy()
+
+    def _coreset_selection(
+        self,
+        scored_candidates: List[ScoredCandidate],
+        budget: int
+    ) -> List[ScoredCandidate]:
+        """
+        Greedy k-center selection in probability space (Core-Set).
+        Maximizes diversity by iteratively picking the candidate farthest
+        from all previously selected candidates.
+        """
+        if len(scored_candidates) <= budget:
+            return list(scored_candidates)
+
+        # Get probability vectors for all candidates
+        prob_vectors = []
+        for sc in scored_candidates:
+            probs = self.classifier.get_probabilities(
+                sc.candidate.text, max_length=self.max_length
+            )
+            prob_vectors.append(probs.cpu().numpy())
+        prob_matrix = np.array(prob_vectors)
+
+        # Greedy k-center
+        selected_indices = [0]  # Start with first candidate
+        for _ in range(budget - 1):
+            dists = euclidean_distances(prob_matrix, prob_matrix[selected_indices])
+            min_dists = dists.min(axis=1)  # Distance to nearest selected
+            min_dists[selected_indices] = -1  # Exclude already selected
+            next_idx = int(np.argmax(min_dists))
+            selected_indices.append(next_idx)
+
+        return [scored_candidates[i] for i in selected_indices]
 
     def get_entropy_statistics(
         self,

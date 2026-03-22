@@ -30,14 +30,20 @@ class FGSMAttack:
 
     def get_embeddings(self, input_ids: torch.Tensor) -> torch.Tensor:
         """Get word embeddings from model"""
-        if hasattr(self.model, 'bert'):
-            return self.model.bert.embeddings.word_embeddings(input_ids)
-        elif hasattr(self.model, 'distilbert'):
+        # Check distilbert/roberta before bert — SecBERT has 'bert', SecRoBERTa has 'roberta'
+        if hasattr(self.model, 'distilbert'):
             return self.model.distilbert.embeddings.word_embeddings(input_ids)
         elif hasattr(self.model, 'roberta'):
             return self.model.roberta.embeddings.word_embeddings(input_ids)
+        elif hasattr(self.model, 'bert'):
+            return self.model.bert.embeddings.word_embeddings(input_ids)
         else:
-            raise ValueError(f"Unsupported model architecture")
+            raise ValueError(f"Unsupported model architecture: {type(self.model)}")
+
+    def _get_position_ids(self, input_ids: torch.Tensor) -> torch.Tensor:
+        """Generate position IDs for inputs_embeds forward pass."""
+        seq_length = input_ids.shape[1]
+        return torch.arange(seq_length, device=input_ids.device).unsqueeze(0).expand(input_ids.shape[0], -1)
 
     def generate_adversarial_embeddings(
         self,
@@ -61,12 +67,13 @@ class FGSMAttack:
         # Get embeddings and enable gradients
         embeddings = self.get_embeddings(input_ids)
         embeddings = embeddings.clone().detach().requires_grad_(True)
+        position_ids = self._get_position_ids(input_ids)
 
         # Forward pass
         outputs = self.model(
             inputs_embeds=embeddings,
             attention_mask=attention_mask,
-            input_ids=None
+            position_ids=position_ids
         )
 
         # Compute loss
@@ -124,11 +131,12 @@ class FGSMAttack:
         )
 
         # Adversarial prediction
+        position_ids = self._get_position_ids(input_ids)
         with torch.no_grad():
             adv_outputs = self.model(
                 inputs_embeds=adv_embeddings,
                 attention_mask=attention_mask,
-                input_ids=None
+                position_ids=position_ids
             )
             adv_pred = torch.argmax(adv_outputs.logits, dim=-1).item()
 
@@ -212,12 +220,19 @@ class PGDAttack:
 
     def get_embeddings(self, input_ids: torch.Tensor) -> torch.Tensor:
         """Get word embeddings from model"""
-        if hasattr(self.model, 'bert'):
-            return self.model.bert.embeddings.word_embeddings(input_ids)
-        elif hasattr(self.model, 'distilbert'):
+        if hasattr(self.model, 'distilbert'):
             return self.model.distilbert.embeddings.word_embeddings(input_ids)
+        elif hasattr(self.model, 'roberta'):
+            return self.model.roberta.embeddings.word_embeddings(input_ids)
+        elif hasattr(self.model, 'bert'):
+            return self.model.bert.embeddings.word_embeddings(input_ids)
         else:
-            raise ValueError(f"Unsupported model architecture")
+            raise ValueError(f"Unsupported model architecture: {type(self.model)}")
+
+    def _get_position_ids(self, input_ids: torch.Tensor) -> torch.Tensor:
+        """Generate position IDs for inputs_embeds forward pass."""
+        seq_length = input_ids.shape[1]
+        return torch.arange(seq_length, device=input_ids.device).unsqueeze(0).expand(input_ids.shape[0], -1)
 
     def generate_adversarial_embeddings(
         self,
@@ -230,6 +245,7 @@ class PGDAttack:
 
         # Get original embeddings
         orig_embeddings = self.get_embeddings(input_ids).detach()
+        position_ids = self._get_position_ids(input_ids)
 
         # Initialize perturbation
         delta = torch.zeros_like(orig_embeddings).uniform_(
@@ -244,7 +260,7 @@ class PGDAttack:
             outputs = self.model(
                 inputs_embeds=adv_embeddings,
                 attention_mask=attention_mask,
-                input_ids=None
+                position_ids=position_ids
             )
 
             loss = self.criterion(outputs.logits, labels)

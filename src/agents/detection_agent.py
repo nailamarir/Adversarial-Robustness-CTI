@@ -21,8 +21,9 @@ from ..models.classifier import CTIClassifier
 from ..attacks.text_attacks import (
     TextAttacker, SynonymAttack, CharacterSwapAttack,
     HomoglyphAttack, KeyboardTypoAttack, CombinedAttack,
-    RandomAttackSelector
+    RandomAttackSelector, BERTAttackSimulated
 )
+from ..attacks.fgsm import FGSMAttack
 
 
 @dataclass
@@ -62,13 +63,14 @@ class DetectionAgent:
         self.confidence_threshold = confidence_threshold
         self.seed = seed
 
-        # Initialize attack suite
+        # Initialize attack suite — diverse attacks for multi-attack pool
         if attacks is None:
             self.attacks = {
-                "synonym": SynonymAttack(num_replacements=3, seed=seed),
-                "char_swap": CharacterSwapAttack(num_swaps=2, seed=seed),
-                "homoglyph": HomoglyphAttack(num_replacements=3, seed=seed),
-                "keyboard_typo": KeyboardTypoAttack(num_typos=2, seed=seed),
+                "synonym": SynonymAttack(num_replacements=5, seed=seed),
+                "char_swap": CharacterSwapAttack(num_swaps=3, seed=seed),
+                "homoglyph": HomoglyphAttack(num_replacements=4, seed=seed),
+                "keyboard_typo": KeyboardTypoAttack(num_typos=3, seed=seed),
+                "bert_attack": BERTAttackSimulated(num_replacements=5, seed=seed),
                 "combined": CombinedAttack(seed=seed),
             }
         else:
@@ -201,6 +203,73 @@ class DetectionAgent:
               f"flagged {len(candidate_pool)} adversarial candidates")
 
         return candidate_pool
+
+    def generate_fgsm_pool(
+        self,
+        df: pd.DataFrame,
+        epsilon: float = 0.1,
+        text_column: str = "full_text",
+        label_column: str = "label_id_encoded",
+        pool_size: int = 500,
+        random_state: int = 42
+    ) -> List[AdversarialCandidate]:
+        """
+        Generate adversarial candidates via FGSM embedding attacks.
+        These are the samples that actually shift the decision boundary.
+        The text is preserved but marked with FGSM metadata for retraining
+        with embedding perturbations.
+        """
+        if pool_size < len(df):
+            df_sample = df.sample(n=pool_size, random_state=random_state)
+        else:
+            df_sample = df
+
+        fgsm = FGSMAttack(
+            model=self.classifier.get_model(),
+            tokenizer=self.classifier.get_tokenizer(),
+            epsilon=epsilon,
+            device=self.device,
+        )
+
+        candidates = []
+        for idx, row in df_sample.iterrows():
+            text = row[text_column]
+            true_label = int(row[label_column])
+            label_name = self.id2label.get(true_label, str(true_label))
+
+            try:
+                orig_pred, adv_pred, attack_success = fgsm.attack_text(
+                    text, true_label, max_length=256
+                )
+            except Exception:
+                continue
+
+            if attack_success:
+                # Get confidence info
+                probs = self.classifier.get_probabilities(text, max_length=256)
+                probs_np = probs.cpu().numpy()
+                conf = float(np.max(probs_np))
+                entropy = self.compute_prediction_entropy(probs_np)
+
+                candidates.append(AdversarialCandidate(
+                    text=text,  # Original text — FGSM is applied at embedding level during retraining
+                    original_text=text,
+                    true_label=true_label,
+                    label_name=label_name,
+                    detection_method="fgsm_embedding_attack",
+                    confidence_score=conf,
+                    metadata={
+                        "original_pred": orig_pred,
+                        "adversarial_pred": adv_pred,
+                        "confidence": conf,
+                        "entropy": entropy,
+                        "attack_type": "fgsm",
+                        "epsilon": epsilon,
+                    }
+                ))
+
+        print(f"Detection Agent (FGSM): {len(candidates)} embedding-attack candidates from {len(df_sample)} samples")
+        return candidates
 
     def flag_low_confidence_inputs(
         self,

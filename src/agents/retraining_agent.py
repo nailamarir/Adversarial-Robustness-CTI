@@ -18,6 +18,7 @@ robustness. Key design choices:
 import torch
 import torch.nn as nn
 import copy
+from itertools import cycle
 from torch.optim import AdamW
 from torch.utils.data import DataLoader, TensorDataset
 from tqdm import tqdm
@@ -44,13 +45,17 @@ class RetrainingAgent:
     def __init__(
         self,
         classifier: CTIClassifier,
-        learning_rate: float = 2e-5,
-        epochs_per_iteration: int = 2,
-        regularization_lambda: float = 0.01,
-        clean_mix_ratio: float = 0.3,
+        learning_rate: float = 5e-6,
+        epochs_per_iteration: int = 3,
+        regularization_lambda: float = 0.1,
+        clean_mix_ratio: float = 3.0,
         max_grad_norm: float = 1.0,
-        epsilon: float = 0.01,
-        max_length: int = 512
+        epsilon: float = 0.05,
+        max_length: int = 512,
+        # Enhancement parameters
+        p_fgsm_clean: float = 0.3,       # Prob of applying FGSM to clean batches
+        total_iterations: int = 5,        # For progressive regularization
+        epsilon_schedule: Optional[List[float]] = None,  # Epsilon curriculum
     ):
         self.classifier = classifier
         self.learning_rate = learning_rate
@@ -61,6 +66,9 @@ class RetrainingAgent:
         self.epsilon = epsilon
         self.max_length = max_length
         self.device = classifier.device
+        self.p_fgsm_clean = p_fgsm_clean
+        self.total_iterations = total_iterations
+        self.epsilon_schedule = epsilon_schedule or [0.02, 0.04, 0.06, 0.08, 0.10]
 
         # Store reference parameters for regularization
         self.reference_params: Optional[Dict[str, torch.Tensor]] = None
@@ -146,9 +154,10 @@ class RetrainingAgent:
         all_attention_masks = [adv_encodings["attention_mask"]]
         all_labels = [torch.tensor(adv_labels, dtype=torch.long)]
 
-        # Mix in clean samples directly from their tokenized tensors (no decode round-trip)
+        # Mix in clean samples — use ratio relative to adversarial count
+        # clean_mix_ratio=2.0 means 2x more clean samples than adversarial
         if clean_loader is not None and self.clean_mix_ratio > 0:
-            n_clean_to_add = int(len(adv_texts) * self.clean_mix_ratio)
+            n_clean_to_add = max(int(len(adv_texts) * self.clean_mix_ratio), len(adv_texts))
             clean_added = 0
             clean_ids_list, clean_mask_list, clean_label_list = [], [], []
 
@@ -202,11 +211,14 @@ class RetrainingAgent:
     ) -> torch.Tensor:
         """Generate FGSM adversarial embeddings for adversarial retraining."""
         embeddings_clone = embeddings.clone().detach().requires_grad_(True)
+        position_ids = self.classifier._get_position_ids(
+            embeddings.shape[1], embeddings.shape[0]
+        )
 
         outputs = self.classifier.get_model()(
             inputs_embeds=embeddings_clone,
             attention_mask=attention_mask,
-            input_ids=None
+            position_ids=position_ids
         )
         loss = criterion(outputs.logits, labels)
         loss.backward()
@@ -226,13 +238,13 @@ class RetrainingAgent:
         r"""
         Perform one active learning retraining iteration.
 
-        This implements Steps 4-5 of Algorithm 1:
-        Step 4: theta <- FineTune(theta, L, epochs=2)
-        Step 5: U <- U \ S_t
+        Trains on the FULL clean training set with FGSM adversarial augmentation,
+        plus the selected adversarial samples as additional augmentation.
+        This ensures the model retains clean accuracy while learning robustness.
 
         Args:
-            selected_samples: Selected high-uncertainty samples (from SelectionAgent)
-            clean_loader: Clean training data for mixed training
+            selected_samples: Selected high-utility adversarial samples
+            clean_loader: FULL clean training DataLoader (used entirely)
             dev_loader: Validation loader for evaluation
             class_weights: Class weights for loss function
             iteration: Current AL iteration number
@@ -245,20 +257,28 @@ class RetrainingAgent:
         # Save reference parameters for regularization
         self.save_reference_parameters()
 
-        # Prepare data
+        # Prepare selected adversarial texts as a supplementary loader
         adv_texts, adv_labels = self.prepare_selected_data(selected_samples)
 
         if not adv_texts:
             return {"status": "no_samples", "iteration": iteration}
 
-        # Create mixed dataloader
-        mixed_loader = self.create_mixed_dataloader(
-            adv_texts, adv_labels,
-            clean_loader=clean_loader,
-            batch_size=16
-        )
+        # Create adversarial supplement loader (just the selected samples)
+        adv_loader = None
+        if adv_texts:
+            tokenizer = self.classifier.get_tokenizer()
+            adv_encodings = tokenizer(
+                adv_texts, truncation=True, padding="max_length",
+                max_length=self.max_length, return_tensors="pt"
+            )
+            adv_dataset = TensorDataset(
+                adv_encodings["input_ids"],
+                adv_encodings["attention_mask"],
+                torch.tensor(adv_labels, dtype=torch.long),
+            )
+            adv_loader = DataLoader(adv_dataset, batch_size=16, shuffle=True)
 
-        # Setup optimizer
+        # Setup optimizer — lower LR for fine-tuning
         optimizer = AdamW(model.parameters(), lr=self.learning_rate)
 
         # Setup loss function
@@ -267,47 +287,101 @@ class RetrainingAgent:
         else:
             criterion = nn.CrossEntropyLoss()
 
-        # Fine-tune for a few epochs
+        # ================================================================
+        # INTERLEAVED ADVERSARIAL TRAINING (6 enhancements)
+        # ================================================================
+        # 1. Interleaved: every clean batch also gets an adversarial step
+        # 2. FGSM on random clean batches (p=0.3, no annotation needed)
+        # 3. Multiple epochs (3 per iteration)
+        # 4. Higher LR (5e-6)
+        # 5. Progressive regularization (weak early, strong late)
+        # 6. Epsilon curriculum across iterations
+        # ================================================================
+
+        # Enhancement 5: Progressive regularization
+        effective_lambda = self.reg_lambda * max(0.1, iteration / max(self.total_iterations, 1))
+
+        # Enhancement 6: Epsilon curriculum
+        if 0 < iteration <= len(self.epsilon_schedule):
+            current_epsilon = self.epsilon_schedule[iteration - 1]
+        else:
+            current_epsilon = self.epsilon
+        old_epsilon = self.epsilon
+        self.epsilon = current_epsilon
+
         iteration_losses = []
         model.train()
+
+        # Enhancement 1: Cycling iterator over selected adversarial samples
+        adv_cycle = cycle(adv_loader) if adv_loader is not None else None
 
         for epoch in range(self.epochs_per_iteration):
             epoch_loss = 0.0
             n_batches = 0
+            n_adv_updates = 0
 
-            for batch in mixed_loader:
+            if clean_loader is None:
+                continue
+
+            for batch in clean_loader:
                 optimizer.zero_grad()
 
-                input_ids = batch[0].to(self.device)
-                attention_mask = batch[1].to(self.device)
-                labels = batch[2].to(self.device)
+                input_ids = batch["input_ids"].to(self.device)
+                attention_mask = batch["attention_mask"].to(self.device)
+                labels = batch["labels"].to(self.device)
 
-                # Get embeddings for adversarial training
-                embeddings = self.classifier.get_embeddings(input_ids)
+                # --- Clean loss on full training batch ---
+                outputs = model(input_ids=input_ids, attention_mask=attention_mask)
+                clean_loss = criterion(outputs.logits, labels)
 
-                # Clean forward pass
-                clean_outputs = model(
-                    inputs_embeds=embeddings,
-                    attention_mask=attention_mask,
-                    input_ids=None
+                # --- Enhancement 2: FGSM on random clean batches (no annotation) ---
+                adv_clean_loss = torch.tensor(0.0, device=self.device)
+                if np.random.random() < self.p_fgsm_clean:
+                    embeddings = self.classifier.get_embeddings(input_ids)
+                    position_ids = self.classifier._get_position_ids(
+                        input_ids.shape[1], input_ids.shape[0]
+                    )
+                    adv_emb = self.fgsm_perturbation(
+                        embeddings, attention_mask, labels, criterion
+                    )
+                    adv_out = model(
+                        inputs_embeds=adv_emb,
+                        attention_mask=attention_mask,
+                        position_ids=position_ids
+                    )
+                    adv_clean_loss = criterion(adv_out.logits, labels)
+                    n_adv_updates += 1
+
+                # --- Enhancement 1: Interleaved adversarial from selected pool ---
+                adv_selected_loss = torch.tensor(0.0, device=self.device)
+                if adv_cycle is not None:
+                    adv_batch = next(adv_cycle)
+                    adv_ids = adv_batch[0].to(self.device)
+                    adv_mask = adv_batch[1].to(self.device)
+                    adv_lbls = adv_batch[2].to(self.device)
+
+                    adv_emb = self.classifier.get_embeddings(adv_ids)
+                    position_ids = self.classifier._get_position_ids(
+                        adv_ids.shape[1], adv_ids.shape[0]
+                    )
+                    adv_perturbed = self.fgsm_perturbation(
+                        adv_emb, adv_mask, adv_lbls, criterion
+                    )
+                    adv_out = model(
+                        inputs_embeds=adv_perturbed,
+                        attention_mask=adv_mask,
+                        position_ids=position_ids
+                    )
+                    adv_selected_loss = criterion(adv_out.logits, adv_lbls)
+                    n_adv_updates += 1
+
+                # --- Combined loss ---
+                total_loss = (
+                    0.6 * clean_loss
+                    + 0.2 * adv_clean_loss
+                    + 0.2 * adv_selected_loss
+                    + effective_lambda * self.compute_regularization_loss()
                 )
-                clean_loss = criterion(clean_outputs.logits, labels)
-
-                # FGSM adversarial forward pass
-                adv_embeddings = self.fgsm_perturbation(
-                    embeddings, attention_mask, labels, criterion
-                )
-                adv_outputs = model(
-                    inputs_embeds=adv_embeddings,
-                    attention_mask=attention_mask,
-                    input_ids=None
-                )
-                adv_loss = criterion(adv_outputs.logits, labels)
-
-                # Combined loss: L_total = L_CE(S*) + lambda * L_reg(theta)
-                ce_loss = 0.7 * clean_loss + 0.3 * adv_loss
-                reg_loss = self.compute_regularization_loss()
-                total_loss = ce_loss + self.reg_lambda * reg_loss
 
                 total_loss.backward()
                 torch.nn.utils.clip_grad_norm_(model.parameters(), self.max_grad_norm)
@@ -318,6 +392,11 @@ class RetrainingAgent:
 
             avg_epoch_loss = epoch_loss / max(n_batches, 1)
             iteration_losses.append(avg_epoch_loss)
+            print(f"    Epoch {epoch+1}/{self.epochs_per_iteration}: "
+                  f"loss={avg_epoch_loss:.4f}, adv_updates={n_adv_updates}, "
+                  f"eps={current_epsilon:.3f}, lambda={effective_lambda:.3f}")
+
+        self.epsilon = old_epsilon
 
         # Evaluate if dev_loader provided
         dev_acc, dev_f1 = 0.0, 0.0

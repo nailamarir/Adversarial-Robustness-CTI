@@ -1,6 +1,12 @@
 __pycache__/
 *.pyc
 *.pyo
-outputs/models/
-AnnoCTR/.git/
 *.pt
+venv/
+AnnoCTR/
+outputs/*.log
+outputs/smoke_test*/
+outputs/temp/
+outputs/paper_final/*.log
+outputs/models/
+nltk_data/

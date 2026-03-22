@@ -360,6 +360,61 @@ class RandomAttackSelector(TextAttacker):
         return selected_attack.attack(text)
 
 
+class BERTAttackSimulated(TextAttacker):
+    """
+    Simulated BERT-Attack: context-aware token replacement.
+    Uses WordNet synonyms filtered by POS tags as a lightweight proxy
+    for masked LM replacement (avoids loading a separate BERT model).
+    More sophisticated than simple SynonymAttack — considers POS and
+    replaces content words with higher probability.
+    """
+
+    def __init__(self, num_replacements: int = 5, seed: int = 42):
+        super().__init__(seed)
+        self.num_replacements = num_replacements
+
+    def _get_pos_synonyms(self, word: str, pos_tag: str) -> List[str]:
+        """Get synonyms matching the POS tag."""
+        wn_pos = {'NN': wordnet.NOUN, 'VB': wordnet.VERB,
+                   'JJ': wordnet.ADJ, 'RB': wordnet.ADV}.get(pos_tag[:2])
+        if not wn_pos:
+            return []
+        synonyms = set()
+        for syn in wordnet.synsets(word, pos=wn_pos):
+            for lemma in syn.lemmas():
+                name = lemma.name().replace('_', ' ')
+                if name.lower() != word.lower():
+                    synonyms.add(name)
+        return list(synonyms)
+
+    def attack(self, text: str) -> str:
+        """Replace content words with POS-aware synonyms."""
+        try:
+            tokens = word_tokenize(text)
+            tagged = nltk.pos_tag(tokens)
+        except Exception:
+            return text
+
+        replacements = 0
+        result = []
+        # Prioritize content words (nouns, verbs, adjectives)
+        content_indices = [i for i, (w, t) in enumerate(tagged)
+                          if t[:2] in ('NN', 'VB', 'JJ', 'RB') and len(w) > 3]
+        random.shuffle(content_indices)
+        replace_set = set(content_indices[:self.num_replacements])
+
+        for i, (word, tag) in enumerate(tagged):
+            if i in replace_set:
+                syns = self._get_pos_synonyms(word, tag)
+                if syns:
+                    result.append(random.choice(syns))
+                    replacements += 1
+                    continue
+            result.append(word)
+
+        return " ".join(result)
+
+
 def create_attack_suite(seed: int = 42) -> dict:
     """Create a dictionary of all available attacks"""
     return {
@@ -370,5 +425,6 @@ def create_attack_suite(seed: int = 42) -> dict:
         "char_deletion": CharacterDeletionAttack(seed=seed),
         "char_insertion": CharacterInsertionAttack(seed=seed),
         "combined": CombinedAttack(seed=seed),
-        "random": RandomAttackSelector(seed=seed)
+        "random": RandomAttackSelector(seed=seed),
+        "bert_attack": BERTAttackSimulated(seed=seed),
     }

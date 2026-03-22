@@ -54,11 +54,20 @@ class AgenticDefenseFramework:
         # Detection parameters
         pool_size: int = 500,
         confidence_threshold: float = 0.7,
+        # Adaptive parameters (Eqs. 6, 10 in paper)
+        adaptive: bool = True,
+        budget_min: int = 10,
+        budget_max: int = 100,
+        budget_delta: int = 10,
+        budget_epsilon: float = 0.01,
+        tau_alpha: float = 0.1,
+        asr_target: float = 0.3,
+        drift_epsilon: float = 0.02,
         # Retraining parameters
         retrain_lr: float = 2e-5,
         retrain_epochs: int = 2,
-        regularization_lambda: float = 0.01,
-        clean_mix_ratio: float = 0.3,
+        regularization_lambda: float = 0.1,
+        clean_mix_ratio: float = 3.0,
         epsilon: float = 0.01,
         # Evaluation
         eval_attack_samples: int = 200,
@@ -76,6 +85,19 @@ class AgenticDefenseFramework:
         self.output_dir = output_dir
         self.seed = seed
         self.max_length = max_length
+
+        # Adaptive parameters
+        self.adaptive = adaptive
+        self.budget_min = budget_min
+        self.budget_max = budget_max
+        self.budget_delta = budget_delta
+        self.budget_epsilon = budget_epsilon
+        self.tau_alpha = tau_alpha
+        self.asr_target = asr_target
+        self.drift_epsilon = drift_epsilon
+        self.current_budget = budget_per_iteration
+        self.current_tau = confidence_threshold
+        self.prev_robust_acc = 0.0
 
         # Initialize the four agents
         self.detection_agent = DetectionAgent(
@@ -184,16 +206,32 @@ class AgenticDefenseFramework:
               f"ASR: {initial_metrics['attack_success_rate']:.4f}")
 
         # =====================================================================
-        # Step 1: Detection Agent generates adversarial candidate pool U
+        # Step 1: Detection Agent generates multi-attack adversarial pool U
         # =====================================================================
-        print("\n--- Detection Agent: Generating Adversarial Pool ---")
-        self.candidate_pool = self.detection_agent.generate_adversarial_pool(
+        print("\n--- Detection Agent: Generating Multi-Attack Pool ---")
+
+        # Phase 1a: Text-level attacks (synonym, charswap, homoglyph, etc.)
+        text_pool = self.detection_agent.generate_adversarial_pool(
             df=test_df,
             text_column=text_column,
             label_column=label_column,
             pool_size=self.pool_size,
             random_state=self.seed,
         )
+
+        # Phase 1b: FGSM embedding-level attacks (critical for robust accuracy)
+        fgsm_pool = self.detection_agent.generate_fgsm_pool(
+            df=test_df,
+            epsilon=0.1,
+            text_column=text_column,
+            label_column=label_column,
+            pool_size=min(self.pool_size, 300),
+            random_state=self.seed,
+        )
+
+        # Combine pools — FGSM candidates are highest priority
+        self.candidate_pool = fgsm_pool + text_pool
+        print(f"  Combined pool: {len(fgsm_pool)} FGSM + {len(text_pool)} text = {len(self.candidate_pool)} total")
 
         detection_stats = self.detection_agent.get_statistics()
         self.audit_agent.log_detection(
@@ -230,10 +268,11 @@ class AgenticDefenseFramework:
                 break
 
             # Step 1: Selection Agent scores and selects top-B
-            print(f"\n  [Selection] Scoring {len(self.candidate_pool)} candidates...")
+            effective_budget = self.current_budget if self.adaptive else self.budget
+            print(f"\n  [Selection] Scoring {len(self.candidate_pool)} candidates (budget={effective_budget})...")
             selected = self.selection_agent.select_from_pool(
                 self.candidate_pool,
-                budget=self.budget
+                budget=effective_budget
             )
 
             if not selected:
@@ -301,6 +340,32 @@ class AgenticDefenseFramework:
                 "metrics": iter_metrics,
             })
 
+            # Adaptive updates (Eqs. 6, 10, 12 in paper)
+            current_robust = iter_metrics['robust_accuracy']
+            current_asr = iter_metrics['attack_success_rate']
+            delta_robust = current_robust - self.prev_robust_acc
+
+            if self.adaptive:
+                # Eq. 10: Budget adaptation based on robustness gain
+                if delta_robust > self.budget_epsilon:
+                    self.current_budget = max(self.budget_min, self.current_budget - self.budget_delta)
+                else:
+                    self.current_budget = min(self.budget_max, self.current_budget + self.budget_delta)
+
+                # Eq. 6: Threshold adaptation based on ASR
+                self.current_tau = self.current_tau - self.tau_alpha * (current_asr - self.asr_target)
+                self.current_tau = max(0.1, min(0.95, self.current_tau))
+
+                # Eq. 12: Drift alert — reset to aggressive if robustness drops
+                if delta_robust < -self.drift_epsilon and t > 1:
+                    self.current_budget = self.budget_max
+                    self.current_tau = max(0.3, self.current_tau - 0.1)
+                    print(f"    [Audit] DRIFT ALERT: robustness dropped by {-delta_robust:.4f}, increasing budget")
+
+                self.detection_agent.confidence_threshold = self.current_tau
+
+            self.prev_robust_acc = current_robust
+
             # Print iteration summary
             print(f"\n  Iteration {t} Summary:")
             print(f"    Samples labeled this iter: {len(selected)}")
@@ -309,6 +374,15 @@ class AgenticDefenseFramework:
             print(f"    Clean Acc:   {iter_metrics['clean_accuracy']:.4f}")
             print(f"    Robust Acc:  {iter_metrics['robust_accuracy']:.4f}")
             print(f"    ASR:         {iter_metrics['attack_success_rate']:.4f}")
+            if self.adaptive:
+                print(f"    Budget B^(t): {self.current_budget}, Threshold τ^(t): {self.current_tau:.3f}")
+
+            # Store adaptive state in iteration results
+            self.iteration_results[-1]["adaptive_state"] = {
+                "budget": self.current_budget,
+                "tau": self.current_tau,
+                "delta_robust": delta_robust,
+            }
 
             # Generate iteration summary in audit log
             self.audit_agent.generate_iteration_summary(t)
@@ -357,7 +431,7 @@ class AgenticDefenseFramework:
         # Use FGSM embedding-level attacks for meaningful robustness evaluation
         attack_results = adv_evaluator.evaluate_fgsm_attacks(
             test_df,
-            epsilon=0.3,
+            epsilon=0.1,
             n_samples=self.eval_attack_samples,
             random_state=self.seed,
         )

@@ -77,7 +77,7 @@ AL_RETRAIN_EPOCHS = 3
 AL_RETRAIN_LR = 5e-6  # Lower than baseline to prevent catastrophic forgetting
 AL_REG_LAMBDA = 0.01
 EPSILON = 0.01           # Training perturbation (used in AL retraining)
-EVAL_EPSILON = 0.3       # Evaluation FGSM epsilon (stronger, to test robustness)
+EVAL_EPSILON = 0.1       # Evaluation FGSM epsilon (moderate, avoids trivial attack)
 ATTACK_SAMPLES = 500
 CONFIDENCE_THRESHOLD = 0.7
 

@@ -1,0 +1,1956 @@
+{
+  "seed": 42,
+  "model": "distilbert",
+  "no_defense": {
+    "n_samples": 200,
+    "n_originally_correct": 177,
+    "n_robust_correct": 48,
+    "n_successful_attacks": 131,
+    "clean_accuracy": 0.885,
+    "robust_accuracy": 0.24,
+    "attack_success_rate": 0.7401129943502824,
+    "robustness_gap": 0.645,
+    "labeled": 0
+  },
+  "full_adv": {
+    "n_samples": 200,
+    "n_originally_correct": 177,
+    "n_robust_correct": 132,
+    "n_successful_attacks": 56,
+    "clean_accuracy": 0.885,
+    "robust_accuracy": 0.66,
+    "attack_success_rate": 0.3163841807909605,
+    "robustness_gap": 0.22499999999999998,
+    "labeled": 500
+  },
+  "random": {
+    "n_samples": 200,
+    "n_originally_correct": 188,
+    "n_robust_correct": 136,
+    "n_successful_attacks": 56,
+    "clean_accuracy": 0.94,
+    "robust_accuracy": 0.68,
+    "attack_success_rate": 0.2978723404255319,
+    "robustness_gap": 0.2599999999999999,
+    "total_labeled": 325
+  },
+  "random_timeline": [
+    {
+      "iteration": 0,
+      "n_labeled": 0,
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 177,
+        "n_robust_correct": 48,
+        "n_successful_attacks": 131,
+        "clean_accuracy": 0.885,
+        "robust_accuracy": 0.24,
+        "attack_success_rate": 0.7401129943502824,
+        "robustness_gap": 0.645
+      }
+    },
+    {
+      "iteration": 1,
+      "n_labeled": 50,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 276,
+      "retrain_result": {
+        "iteration": 1,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.36384461601923196,
+        "final_loss": 0.23382757249468805,
+        "dev_accuracy": 0.8303370786516854,
+        "dev_f1": 0.6308200025412796
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 176,
+        "n_robust_correct": 103,
+        "n_successful_attacks": 82,
+        "clean_accuracy": 0.88,
+        "robust_accuracy": 0.515,
+        "attack_success_rate": 0.4659090909090909,
+        "robustness_gap": 0.365
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.515
+      }
+    },
+    {
+      "iteration": 2,
+      "n_labeled": 100,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 226,
+      "retrain_result": {
+        "iteration": 2,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.2497730143535084,
+        "final_loss": 0.2080251755275104,
+        "dev_accuracy": 0.8348314606741573,
+        "dev_f1": 0.639822385717262
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 178,
+        "n_robust_correct": 94,
+        "n_successful_attacks": 94,
+        "clean_accuracy": 0.89,
+        "robust_accuracy": 0.47,
+        "attack_success_rate": 0.5280898876404494,
+        "robustness_gap": 0.42000000000000004
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": -0.04500000000000004
+      }
+    },
+    {
+      "iteration": 3,
+      "n_labeled": 150,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 176,
+      "retrain_result": {
+        "iteration": 3,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.21113147238127636,
+        "final_loss": 0.18266067197707245,
+        "dev_accuracy": 0.8426966292134831,
+        "dev_f1": 0.6580100880828561
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 180,
+        "n_robust_correct": 127,
+        "n_successful_attacks": 62,
+        "clean_accuracy": 0.9,
+        "robust_accuracy": 0.635,
+        "attack_success_rate": 0.34444444444444444,
+        "robustness_gap": 0.265
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.16500000000000004
+      }
+    },
+    {
+      "iteration": 4,
+      "n_labeled": 200,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 125,
+      "retrain_result": {
+        "iteration": 4,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.1949721740246515,
+        "final_loss": 0.16281379893379225,
+        "dev_accuracy": 0.8359550561797753,
+        "dev_f1": 0.5781029229485329
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 182,
+        "n_robust_correct": 143,
+        "n_successful_attacks": 48,
+        "clean_accuracy": 0.91,
+        "robust_accuracy": 0.715,
+        "attack_success_rate": 0.26373626373626374,
+        "robustness_gap": 0.19500000000000006
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.07999999999999996
+      }
+    },
+    {
+      "iteration": 5,
+      "n_labeled": 250,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 75,
+      "retrain_result": {
+        "iteration": 5,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.21130987423724154,
+        "final_loss": 0.19000714767774327,
+        "dev_accuracy": 0.8393258426966292,
+        "dev_f1": 0.6497976463481349
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 184,
+        "n_robust_correct": 150,
+        "n_successful_attacks": 44,
+        "clean_accuracy": 0.92,
+        "robust_accuracy": 0.75,
+        "attack_success_rate": 0.2391304347826087,
+        "robustness_gap": 0.17000000000000004
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.03500000000000003
+      }
+    },
+    {
+      "iteration": 6,
+      "n_labeled": 300,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 25,
+      "retrain_result": {
+        "iteration": 6,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.162758983808712,
+        "final_loss": 0.13274990315343504,
+        "dev_accuracy": 0.8292134831460675,
+        "dev_f1": 0.6308869059894945
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 188,
+        "n_robust_correct": 154,
+        "n_successful_attacks": 39,
+        "clean_accuracy": 0.94,
+        "robust_accuracy": 0.77,
+        "attack_success_rate": 0.2074468085106383,
+        "robustness_gap": 0.16999999999999993
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.020000000000000018
+      }
+    },
+    {
+      "iteration": 7,
+      "n_labeled": 325,
+      "n_selected_this_iter": 25,
+      "remaining_pool": 0,
+      "retrain_result": {
+        "iteration": 7,
+        "n_samples": 25,
+        "epochs": 3,
+        "avg_loss": 0.14856903594206503,
+        "final_loss": 0.13948016473219055,
+        "dev_accuracy": 0.8337078651685393,
+        "dev_f1": 0.6671299272607487
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 188,
+        "n_robust_correct": 136,
+        "n_successful_attacks": 56,
+        "clean_accuracy": 0.94,
+        "robust_accuracy": 0.68,
+        "attack_success_rate": 0.2978723404255319,
+        "robustness_gap": 0.2599999999999999,
+        "total_labeled": 325
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": -0.08999999999999997
+      }
+    }
+  ],
+  "entropy": {
+    "n_samples": 200,
+    "n_originally_correct": 185,
+    "n_robust_correct": 178,
+    "n_successful_attacks": 14,
+    "clean_accuracy": 0.925,
+    "robust_accuracy": 0.89,
+    "attack_success_rate": 0.07567567567567568,
+    "robustness_gap": 0.03500000000000003,
+    "total_labeled": 326
+  },
+  "entropy_timeline": [
+    {
+      "iteration": 0,
+      "n_labeled": 0,
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 177,
+        "n_robust_correct": 48,
+        "n_successful_attacks": 131,
+        "clean_accuracy": 0.885,
+        "robust_accuracy": 0.24,
+        "attack_success_rate": 0.7401129943502824,
+        "robustness_gap": 0.645
+      }
+    },
+    {
+      "iteration": 1,
+      "n_labeled": 50,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 276,
+      "retrain_result": {
+        "iteration": 1,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.36846323651920043,
+        "final_loss": 0.20919474330864804,
+        "dev_accuracy": 0.8314606741573034,
+        "dev_f1": 0.5752522496371794
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 180,
+        "n_robust_correct": 99,
+        "n_successful_attacks": 88,
+        "clean_accuracy": 0.9,
+        "robust_accuracy": 0.495,
+        "attack_success_rate": 0.4888888888888889,
+        "robustness_gap": 0.405
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.495
+      }
+    },
+    {
+      "iteration": 2,
+      "n_labeled": 100,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 226,
+      "retrain_result": {
+        "iteration": 2,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.26010554472624453,
+        "final_loss": 0.17685866797425123,
+        "dev_accuracy": 0.8292134831460675,
+        "dev_f1": 0.6563311091785948
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 185,
+        "n_robust_correct": 102,
+        "n_successful_attacks": 88,
+        "clean_accuracy": 0.925,
+        "robust_accuracy": 0.51,
+        "attack_success_rate": 0.4756756756756757,
+        "robustness_gap": 0.41500000000000004
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.015000000000000013
+      }
+    },
+    {
+      "iteration": 3,
+      "n_labeled": 150,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 176,
+      "retrain_result": {
+        "iteration": 3,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.22607270818291872,
+        "final_loss": 0.17648211652109125,
+        "dev_accuracy": 0.8325842696629213,
+        "dev_f1": 0.662227416952364
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 186,
+        "n_robust_correct": 99,
+        "n_successful_attacks": 92,
+        "clean_accuracy": 0.93,
+        "robust_accuracy": 0.495,
+        "attack_success_rate": 0.4946236559139785,
+        "robustness_gap": 0.43500000000000005
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": -0.015000000000000013
+      }
+    },
+    {
+      "iteration": 4,
+      "n_labeled": 200,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 126,
+      "retrain_result": {
+        "iteration": 4,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.17821960560905958,
+        "final_loss": 0.154622932842391,
+        "dev_accuracy": 0.8247191011235955,
+        "dev_f1": 0.610249164169459
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 186,
+        "n_robust_correct": 132,
+        "n_successful_attacks": 62,
+        "clean_accuracy": 0.93,
+        "robust_accuracy": 0.66,
+        "attack_success_rate": 0.3333333333333333,
+        "robustness_gap": 0.27
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.16500000000000004
+      }
+    },
+    {
+      "iteration": 5,
+      "n_labeled": 250,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 76,
+      "retrain_result": {
+        "iteration": 5,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.1833021686235425,
+        "final_loss": 0.1599053719872877,
+        "dev_accuracy": 0.8258426966292135,
+        "dev_f1": 0.6629272024834917
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 185,
+        "n_robust_correct": 136,
+        "n_successful_attacks": 55,
+        "clean_accuracy": 0.925,
+        "robust_accuracy": 0.68,
+        "attack_success_rate": 0.2972972972972973,
+        "robustness_gap": 0.245
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.020000000000000018
+      }
+    },
+    {
+      "iteration": 6,
+      "n_labeled": 300,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 26,
+      "retrain_result": {
+        "iteration": 6,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.12764392106424985,
+        "final_loss": 0.12066403268201853,
+        "dev_accuracy": 0.8325842696629213,
+        "dev_f1": 0.645329216035862
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 186,
+        "n_robust_correct": 161,
+        "n_successful_attacks": 31,
+        "clean_accuracy": 0.93,
+        "robust_accuracy": 0.805,
+        "attack_success_rate": 0.16666666666666666,
+        "robustness_gap": 0.125
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.125
+      }
+    },
+    {
+      "iteration": 7,
+      "n_labeled": 326,
+      "n_selected_this_iter": 26,
+      "remaining_pool": 0,
+      "retrain_result": {
+        "iteration": 7,
+        "n_samples": 26,
+        "epochs": 3,
+        "avg_loss": 0.11819792153481785,
+        "final_loss": 0.10845461190318878,
+        "dev_accuracy": 0.8314606741573034,
+        "dev_f1": 0.6715983430515656
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 185,
+        "n_robust_correct": 178,
+        "n_successful_attacks": 14,
+        "clean_accuracy": 0.925,
+        "robust_accuracy": 0.89,
+        "attack_success_rate": 0.07567567567567568,
+        "robustness_gap": 0.03500000000000003,
+        "total_labeled": 326
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.08499999999999996
+      }
+    }
+  ],
+  "margin": {
+    "n_samples": 200,
+    "n_originally_correct": 184,
+    "n_robust_correct": 175,
+    "n_successful_attacks": 16,
+    "clean_accuracy": 0.92,
+    "robust_accuracy": 0.875,
+    "attack_success_rate": 0.08695652173913043,
+    "robustness_gap": 0.04500000000000004,
+    "total_labeled": 326
+  },
+  "margin_timeline": [
+    {
+      "iteration": 0,
+      "n_labeled": 0,
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 177,
+        "n_robust_correct": 48,
+        "n_successful_attacks": 131,
+        "clean_accuracy": 0.885,
+        "robust_accuracy": 0.24,
+        "attack_success_rate": 0.7401129943502824,
+        "robustness_gap": 0.645
+      }
+    },
+    {
+      "iteration": 1,
+      "n_labeled": 50,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 276,
+      "retrain_result": {
+        "iteration": 1,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.3338079289965193,
+        "final_loss": 0.18919710064889603,
+        "dev_accuracy": 0.8382022471910112,
+        "dev_f1": 0.6229000754795627
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 181,
+        "n_robust_correct": 70,
+        "n_successful_attacks": 117,
+        "clean_accuracy": 0.905,
+        "robust_accuracy": 0.35,
+        "attack_success_rate": 0.6464088397790055,
+        "robustness_gap": 0.555
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.35
+      }
+    },
+    {
+      "iteration": 2,
+      "n_labeled": 100,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 226,
+      "retrain_result": {
+        "iteration": 2,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.23223741199125272,
+        "final_loss": 0.1912400806590829,
+        "dev_accuracy": 0.8258426966292135,
+        "dev_f1": 0.6319409365930724
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 185,
+        "n_robust_correct": 89,
+        "n_successful_attacks": 100,
+        "clean_accuracy": 0.925,
+        "robust_accuracy": 0.445,
+        "attack_success_rate": 0.5405405405405406,
+        "robustness_gap": 0.48000000000000004
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.09500000000000003
+      }
+    },
+    {
+      "iteration": 3,
+      "n_labeled": 150,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 176,
+      "retrain_result": {
+        "iteration": 3,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.2161661086798248,
+        "final_loss": 0.173905778504665,
+        "dev_accuracy": 0.8303370786516854,
+        "dev_f1": 0.6446393338668638
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 186,
+        "n_robust_correct": 121,
+        "n_successful_attacks": 70,
+        "clean_accuracy": 0.93,
+        "robust_accuracy": 0.605,
+        "attack_success_rate": 0.3763440860215054,
+        "robustness_gap": 0.32500000000000007
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.15999999999999998
+      }
+    },
+    {
+      "iteration": 4,
+      "n_labeled": 200,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 126,
+      "retrain_result": {
+        "iteration": 4,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.2013192763009841,
+        "final_loss": 0.16045072361211973,
+        "dev_accuracy": 0.8292134831460675,
+        "dev_f1": 0.6384902467026998
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 185,
+        "n_robust_correct": 128,
+        "n_successful_attacks": 63,
+        "clean_accuracy": 0.925,
+        "robust_accuracy": 0.64,
+        "attack_success_rate": 0.34054054054054056,
+        "robustness_gap": 0.28500000000000003
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.03500000000000003
+      }
+    },
+    {
+      "iteration": 5,
+      "n_labeled": 250,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 76,
+      "retrain_result": {
+        "iteration": 5,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.19698549013928066,
+        "final_loss": 0.16411755043805903,
+        "dev_accuracy": 0.8157303370786517,
+        "dev_f1": 0.5916601553644619
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 184,
+        "n_robust_correct": 141,
+        "n_successful_attacks": 50,
+        "clean_accuracy": 0.92,
+        "robust_accuracy": 0.705,
+        "attack_success_rate": 0.2717391304347826,
+        "robustness_gap": 0.21500000000000008
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.06499999999999995
+      }
+    },
+    {
+      "iteration": 6,
+      "n_labeled": 300,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 26,
+      "retrain_result": {
+        "iteration": 6,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.13980919119746438,
+        "final_loss": 0.13589042764435919,
+        "dev_accuracy": 0.8370786516853933,
+        "dev_f1": 0.5996733748948555
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 184,
+        "n_robust_correct": 171,
+        "n_successful_attacks": 20,
+        "clean_accuracy": 0.92,
+        "robust_accuracy": 0.855,
+        "attack_success_rate": 0.10869565217391304,
+        "robustness_gap": 0.06500000000000006
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.15000000000000002
+      }
+    },
+    {
+      "iteration": 7,
+      "n_labeled": 326,
+      "n_selected_this_iter": 26,
+      "remaining_pool": 0,
+      "retrain_result": {
+        "iteration": 7,
+        "n_samples": 26,
+        "epochs": 3,
+        "avg_loss": 0.12936778991797168,
+        "final_loss": 0.12049931131353363,
+        "dev_accuracy": 0.8426966292134831,
+        "dev_f1": 0.6524070134556549
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 184,
+        "n_robust_correct": 175,
+        "n_successful_attacks": 16,
+        "clean_accuracy": 0.92,
+        "robust_accuracy": 0.875,
+        "attack_success_rate": 0.08695652173913043,
+        "robustness_gap": 0.04500000000000004,
+        "total_labeled": 326
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.020000000000000018
+      }
+    }
+  ],
+  "coreset": {
+    "n_samples": 200,
+    "n_originally_correct": 186,
+    "n_robust_correct": 175,
+    "n_successful_attacks": 18,
+    "clean_accuracy": 0.93,
+    "robust_accuracy": 0.875,
+    "attack_success_rate": 0.0967741935483871,
+    "robustness_gap": 0.05500000000000005,
+    "total_labeled": 325
+  },
+  "coreset_timeline": [
+    {
+      "iteration": 0,
+      "n_labeled": 0,
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 177,
+        "n_robust_correct": 48,
+        "n_successful_attacks": 131,
+        "clean_accuracy": 0.885,
+        "robust_accuracy": 0.24,
+        "attack_success_rate": 0.7401129943502824,
+        "robustness_gap": 0.645
+      }
+    },
+    {
+      "iteration": 1,
+      "n_labeled": 50,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 276,
+      "retrain_result": {
+        "iteration": 1,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.3342421536315387,
+        "final_loss": 0.19458049715938128,
+        "dev_accuracy": 0.8325842696629213,
+        "dev_f1": 0.5805637569973855
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 178,
+        "n_robust_correct": 87,
+        "n_successful_attacks": 100,
+        "clean_accuracy": 0.89,
+        "robust_accuracy": 0.435,
+        "attack_success_rate": 0.5617977528089888,
+        "robustness_gap": 0.455
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.435
+      }
+    },
+    {
+      "iteration": 2,
+      "n_labeled": 100,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 226,
+      "retrain_result": {
+        "iteration": 2,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.2361506904026712,
+        "final_loss": 0.19723830232664857,
+        "dev_accuracy": 0.8382022471910112,
+        "dev_f1": 0.662343711206119
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 182,
+        "n_robust_correct": 120,
+        "n_successful_attacks": 70,
+        "clean_accuracy": 0.91,
+        "robust_accuracy": 0.6,
+        "attack_success_rate": 0.38461538461538464,
+        "robustness_gap": 0.31000000000000005
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.16499999999999998
+      }
+    },
+    {
+      "iteration": 3,
+      "n_labeled": 150,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 176,
+      "retrain_result": {
+        "iteration": 3,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.22327591942042893,
+        "final_loss": 0.20161393846093809,
+        "dev_accuracy": 0.8303370786516854,
+        "dev_f1": 0.6377419165775641
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 187,
+        "n_robust_correct": 114,
+        "n_successful_attacks": 77,
+        "clean_accuracy": 0.935,
+        "robust_accuracy": 0.57,
+        "attack_success_rate": 0.4117647058823529,
+        "robustness_gap": 0.3650000000000001
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": -0.030000000000000027
+      }
+    },
+    {
+      "iteration": 4,
+      "n_labeled": 200,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 126,
+      "retrain_result": {
+        "iteration": 4,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.1826678267128942,
+        "final_loss": 0.16823917680961614,
+        "dev_accuracy": 0.8224719101123595,
+        "dev_f1": 0.5878177830906168
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 186,
+        "n_robust_correct": 151,
+        "n_successful_attacks": 40,
+        "clean_accuracy": 0.93,
+        "robust_accuracy": 0.755,
+        "attack_success_rate": 0.21505376344086022,
+        "robustness_gap": 0.17500000000000004
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.18500000000000005
+      }
+    },
+    {
+      "iteration": 5,
+      "n_labeled": 250,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 76,
+      "retrain_result": {
+        "iteration": 5,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.15965224937753308,
+        "final_loss": 0.1492813363306639,
+        "dev_accuracy": 0.8314606741573034,
+        "dev_f1": 0.6627993244680366
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 184,
+        "n_robust_correct": 153,
+        "n_successful_attacks": 36,
+        "clean_accuracy": 0.92,
+        "robust_accuracy": 0.765,
+        "attack_success_rate": 0.1956521739130435,
+        "robustness_gap": 0.15500000000000003
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.010000000000000009
+      }
+    },
+    {
+      "iteration": 6,
+      "n_labeled": 300,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 25,
+      "retrain_result": {
+        "iteration": 6,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.12066959740694728,
+        "final_loss": 0.11382577168592564,
+        "dev_accuracy": 0.8359550561797753,
+        "dev_f1": 0.6162385138987322
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 185,
+        "n_robust_correct": 173,
+        "n_successful_attacks": 19,
+        "clean_accuracy": 0.925,
+        "robust_accuracy": 0.865,
+        "attack_success_rate": 0.10270270270270271,
+        "robustness_gap": 0.06000000000000005
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.09999999999999998
+      }
+    },
+    {
+      "iteration": 7,
+      "n_labeled": 325,
+      "n_selected_this_iter": 25,
+      "remaining_pool": 0,
+      "retrain_result": {
+        "iteration": 7,
+        "n_samples": 25,
+        "epochs": 3,
+        "avg_loss": 0.10737963834114883,
+        "final_loss": 0.09893593372734202,
+        "dev_accuracy": 0.8280898876404494,
+        "dev_f1": 0.6380113798650798
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 186,
+        "n_robust_correct": 175,
+        "n_successful_attacks": 18,
+        "clean_accuracy": 0.93,
+        "robust_accuracy": 0.875,
+        "attack_success_rate": 0.0967741935483871,
+        "robustness_gap": 0.05500000000000005,
+        "total_labeled": 325
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.010000000000000009
+      }
+    }
+  ],
+  "static_budget": {
+    "n_samples": 200,
+    "n_originally_correct": 187,
+    "n_robust_correct": 170,
+    "n_successful_attacks": 22,
+    "clean_accuracy": 0.935,
+    "robust_accuracy": 0.85,
+    "attack_success_rate": 0.11764705882352941,
+    "robustness_gap": 0.08500000000000008,
+    "total_labeled": 326
+  },
+  "static_budget_timeline": [
+    {
+      "iteration": 0,
+      "n_labeled": 0,
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 177,
+        "n_robust_correct": 48,
+        "n_successful_attacks": 131,
+        "clean_accuracy": 0.885,
+        "robust_accuracy": 0.24,
+        "attack_success_rate": 0.7401129943502824,
+        "robustness_gap": 0.645
+      }
+    },
+    {
+      "iteration": 1,
+      "n_labeled": 50,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 276,
+      "retrain_result": {
+        "iteration": 1,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.33485044882902715,
+        "final_loss": 0.19529622705964347,
+        "dev_accuracy": 0.8382022471910112,
+        "dev_f1": 0.6330184226471697
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 181,
+        "n_robust_correct": 95,
+        "n_successful_attacks": 93,
+        "clean_accuracy": 0.905,
+        "robust_accuracy": 0.475,
+        "attack_success_rate": 0.5138121546961326,
+        "robustness_gap": 0.43000000000000005
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.475
+      }
+    },
+    {
+      "iteration": 2,
+      "n_labeled": 100,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 226,
+      "retrain_result": {
+        "iteration": 2,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.2404331379627865,
+        "final_loss": 0.19554625169844178,
+        "dev_accuracy": 0.8314606741573034,
+        "dev_f1": 0.6622159422776946
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 185,
+        "n_robust_correct": 122,
+        "n_successful_attacks": 70,
+        "clean_accuracy": 0.925,
+        "robust_accuracy": 0.61,
+        "attack_success_rate": 0.3783783783783784,
+        "robustness_gap": 0.31500000000000006
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.135
+      }
+    },
+    {
+      "iteration": 3,
+      "n_labeled": 150,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 176,
+      "retrain_result": {
+        "iteration": 3,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.19703085054253167,
+        "final_loss": 0.16732664575760972,
+        "dev_accuracy": 0.8292134831460675,
+        "dev_f1": 0.6355878722871355
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 187,
+        "n_robust_correct": 133,
+        "n_successful_attacks": 60,
+        "clean_accuracy": 0.935,
+        "robust_accuracy": 0.665,
+        "attack_success_rate": 0.32085561497326204,
+        "robustness_gap": 0.27
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.05500000000000005
+      }
+    },
+    {
+      "iteration": 4,
+      "n_labeled": 200,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 126,
+      "retrain_result": {
+        "iteration": 4,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.1934027353567396,
+        "final_loss": 0.1518314258086418,
+        "dev_accuracy": 0.8247191011235955,
+        "dev_f1": 0.579873053604996
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 186,
+        "n_robust_correct": 126,
+        "n_successful_attacks": 65,
+        "clean_accuracy": 0.93,
+        "robust_accuracy": 0.63,
+        "attack_success_rate": 0.34946236559139787,
+        "robustness_gap": 0.30000000000000004
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": -0.03500000000000003
+      }
+    },
+    {
+      "iteration": 5,
+      "n_labeled": 250,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 76,
+      "retrain_result": {
+        "iteration": 5,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.17554235416604536,
+        "final_loss": 0.15832012843147578,
+        "dev_accuracy": 0.8247191011235955,
+        "dev_f1": 0.6355832753570615
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 187,
+        "n_robust_correct": 152,
+        "n_successful_attacks": 39,
+        "clean_accuracy": 0.935,
+        "robust_accuracy": 0.76,
+        "attack_success_rate": 0.20855614973262032,
+        "robustness_gap": 0.17500000000000004
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.13
+      }
+    },
+    {
+      "iteration": 6,
+      "n_labeled": 300,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 26,
+      "retrain_result": {
+        "iteration": 6,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.13507268216129648,
+        "final_loss": 0.12599905719533705,
+        "dev_accuracy": 0.8280898876404494,
+        "dev_f1": 0.6379277173072363
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 187,
+        "n_robust_correct": 169,
+        "n_successful_attacks": 24,
+        "clean_accuracy": 0.935,
+        "robust_accuracy": 0.845,
+        "attack_success_rate": 0.12834224598930483,
+        "robustness_gap": 0.09000000000000008
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.08499999999999996
+      }
+    },
+    {
+      "iteration": 7,
+      "n_labeled": 326,
+      "n_selected_this_iter": 26,
+      "remaining_pool": 0,
+      "retrain_result": {
+        "iteration": 7,
+        "n_samples": 26,
+        "epochs": 3,
+        "avg_loss": 0.13153341411114197,
+        "final_loss": 0.12628346698755494,
+        "dev_accuracy": 0.8269662921348314,
+        "dev_f1": 0.6343930413336727
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 187,
+        "n_robust_correct": 170,
+        "n_successful_attacks": 22,
+        "clean_accuracy": 0.935,
+        "robust_accuracy": 0.85,
+        "attack_success_rate": 0.11764705882352941,
+        "robustness_gap": 0.08500000000000008,
+        "total_labeled": 326
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.0050000000000000044
+      }
+    }
+  ],
+  "entropy_coreset": {
+    "n_samples": 200,
+    "n_originally_correct": 185,
+    "n_robust_correct": 166,
+    "n_successful_attacks": 26,
+    "clean_accuracy": 0.925,
+    "robust_accuracy": 0.83,
+    "attack_success_rate": 0.14054054054054055,
+    "robustness_gap": 0.09500000000000008,
+    "total_labeled": 325
+  },
+  "entropy_coreset_timeline": [
+    {
+      "iteration": 0,
+      "n_labeled": 0,
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 177,
+        "n_robust_correct": 48,
+        "n_successful_attacks": 131,
+        "clean_accuracy": 0.885,
+        "robust_accuracy": 0.24,
+        "attack_success_rate": 0.7401129943502824,
+        "robustness_gap": 0.645
+      }
+    },
+    {
+      "iteration": 1,
+      "n_labeled": 50,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 276,
+      "retrain_result": {
+        "iteration": 1,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.34937104656434337,
+        "final_loss": 0.20845504665672207,
+        "dev_accuracy": 0.8359550561797753,
+        "dev_f1": 0.6266946289632292
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 177,
+        "n_robust_correct": 90,
+        "n_successful_attacks": 94,
+        "clean_accuracy": 0.885,
+        "robust_accuracy": 0.45,
+        "attack_success_rate": 0.5310734463276836,
+        "robustness_gap": 0.435
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.45
+      }
+    },
+    {
+      "iteration": 2,
+      "n_labeled": 100,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 226,
+      "retrain_result": {
+        "iteration": 2,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.23869359400302115,
+        "final_loss": 0.18873835340742873,
+        "dev_accuracy": 0.8382022471910112,
+        "dev_f1": 0.6447764689430806
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 185,
+        "n_robust_correct": 124,
+        "n_successful_attacks": 69,
+        "clean_accuracy": 0.925,
+        "robust_accuracy": 0.62,
+        "attack_success_rate": 0.372972972972973,
+        "robustness_gap": 0.30500000000000005
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.16999999999999998
+      }
+    },
+    {
+      "iteration": 3,
+      "n_labeled": 150,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 176,
+      "retrain_result": {
+        "iteration": 3,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.21770291780231857,
+        "final_loss": 0.1784512672444623,
+        "dev_accuracy": 0.8303370786516854,
+        "dev_f1": 0.6451548549669467
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 186,
+        "n_robust_correct": 132,
+        "n_successful_attacks": 61,
+        "clean_accuracy": 0.93,
+        "robust_accuracy": 0.66,
+        "attack_success_rate": 0.3279569892473118,
+        "robustness_gap": 0.27
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.040000000000000036
+      }
+    },
+    {
+      "iteration": 4,
+      "n_labeled": 200,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 126,
+      "retrain_result": {
+        "iteration": 4,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.19399536271553944,
+        "final_loss": 0.17184321547281034,
+        "dev_accuracy": 0.8325842696629213,
+        "dev_f1": 0.5900759845942989
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 184,
+        "n_robust_correct": 133,
+        "n_successful_attacks": 58,
+        "clean_accuracy": 0.92,
+        "robust_accuracy": 0.665,
+        "attack_success_rate": 0.31521739130434784,
+        "robustness_gap": 0.255
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.0050000000000000044
+      }
+    },
+    {
+      "iteration": 5,
+      "n_labeled": 250,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 76,
+      "retrain_result": {
+        "iteration": 5,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.17341205900295453,
+        "final_loss": 0.15452021340734098,
+        "dev_accuracy": 0.8348314606741573,
+        "dev_f1": 0.6659196297876586
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 184,
+        "n_robust_correct": 156,
+        "n_successful_attacks": 35,
+        "clean_accuracy": 0.92,
+        "robust_accuracy": 0.78,
+        "attack_success_rate": 0.19021739130434784,
+        "robustness_gap": 0.14
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.11499999999999999
+      }
+    },
+    {
+      "iteration": 6,
+      "n_labeled": 300,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 25,
+      "retrain_result": {
+        "iteration": 6,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.14396700382552044,
+        "final_loss": 0.13114621635390564,
+        "dev_accuracy": 0.8292134831460675,
+        "dev_f1": 0.6357386686406233
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 183,
+        "n_robust_correct": 175,
+        "n_successful_attacks": 17,
+        "clean_accuracy": 0.915,
+        "robust_accuracy": 0.875,
+        "attack_success_rate": 0.09289617486338798,
+        "robustness_gap": 0.040000000000000036
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": 0.09499999999999997
+      }
+    },
+    {
+      "iteration": 7,
+      "n_labeled": 325,
+      "n_selected_this_iter": 25,
+      "remaining_pool": 0,
+      "retrain_result": {
+        "iteration": 7,
+        "n_samples": 25,
+        "epochs": 3,
+        "avg_loss": 0.12819687391244594,
+        "final_loss": 0.12552816657646204,
+        "dev_accuracy": 0.8404494382022472,
+        "dev_f1": 0.6443053833403275
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 185,
+        "n_robust_correct": 166,
+        "n_successful_attacks": 26,
+        "clean_accuracy": 0.925,
+        "robust_accuracy": 0.83,
+        "attack_success_rate": 0.14054054054054055,
+        "robustness_gap": 0.09500000000000008,
+        "total_labeled": 325
+      },
+      "adaptive_state": {
+        "budget": 50,
+        "tau": 0.7,
+        "delta_robust": -0.04500000000000004
+      }
+    }
+  ],
+  "composite": {
+    "n_samples": 200,
+    "n_originally_correct": 184,
+    "n_robust_correct": 185,
+    "n_successful_attacks": 10,
+    "clean_accuracy": 0.92,
+    "robust_accuracy": 0.925,
+    "attack_success_rate": 0.05434782608695652,
+    "robustness_gap": -0.0050000000000000044,
+    "total_labeled": 326
+  },
+  "composite_timeline": [
+    {
+      "iteration": 0,
+      "n_labeled": 0,
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 177,
+        "n_robust_correct": 48,
+        "n_successful_attacks": 131,
+        "clean_accuracy": 0.885,
+        "robust_accuracy": 0.24,
+        "attack_success_rate": 0.7401129943502824,
+        "robustness_gap": 0.645
+      }
+    },
+    {
+      "iteration": 1,
+      "n_labeled": 50,
+      "n_selected_this_iter": 50,
+      "remaining_pool": 276,
+      "retrain_result": {
+        "iteration": 1,
+        "n_samples": 50,
+        "epochs": 3,
+        "avg_loss": 0.4115661675526367,
+        "final_loss": 0.23722844734616336,
+        "dev_accuracy": 0.8258426966292135,
+        "dev_f1": 0.6360330463775455
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 172,
+        "n_robust_correct": 32,
+        "n_successful_attacks": 140,
+        "clean_accuracy": 0.86,
+        "robust_accuracy": 0.16,
+        "attack_success_rate": 0.813953488372093,
+        "robustness_gap": 0.7
+      },
+      "adaptive_state": {
+        "budget": 40,
+        "tau": 0.6486046511627906,
+        "delta_robust": 0.16
+      }
+    },
+    {
+      "iteration": 2,
+      "n_labeled": 90,
+      "n_selected_this_iter": 40,
+      "remaining_pool": 236,
+      "retrain_result": {
+        "iteration": 2,
+        "n_samples": 40,
+        "epochs": 3,
+        "avg_loss": 0.19851409702759026,
+        "final_loss": 0.16152061160203363,
+        "dev_accuracy": 0.8471910112359551,
+        "dev_f1": 0.6733621348382578
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 182,
+        "n_robust_correct": 92,
+        "n_successful_attacks": 98,
+        "clean_accuracy": 0.91,
+        "robust_accuracy": 0.46,
+        "attack_success_rate": 0.5384615384615384,
+        "robustness_gap": 0.45
+      },
+      "adaptive_state": {
+        "budget": 30,
+        "tau": 0.6247584973166368,
+        "delta_robust": 0.30000000000000004
+      }
+    },
+    {
+      "iteration": 3,
+      "n_labeled": 120,
+      "n_selected_this_iter": 30,
+      "remaining_pool": 206,
+      "retrain_result": {
+        "iteration": 3,
+        "n_samples": 30,
+        "epochs": 3,
+        "avg_loss": 0.20848488322413283,
+        "final_loss": 0.18142065022948722,
+        "dev_accuracy": 0.8382022471910112,
+        "dev_f1": 0.6767308639261059
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 186,
+        "n_robust_correct": 74,
+        "n_successful_attacks": 116,
+        "clean_accuracy": 0.93,
+        "robust_accuracy": 0.37,
+        "attack_success_rate": 0.6236559139784946,
+        "robustness_gap": 0.56
+      },
+      "adaptive_state": {
+        "budget": 100,
+        "tau": 0.49239290591878737,
+        "delta_robust": -0.09000000000000002
+      }
+    },
+    {
+      "iteration": 4,
+      "n_labeled": 220,
+      "n_selected_this_iter": 100,
+      "remaining_pool": 106,
+      "retrain_result": {
+        "iteration": 4,
+        "n_samples": 100,
+        "epochs": 3,
+        "avg_loss": 0.21377316031721794,
+        "final_loss": 0.18730185868758387,
+        "dev_accuracy": 0.8348314606741573,
+        "dev_f1": 0.6485776008839276
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 185,
+        "n_robust_correct": 144,
+        "n_successful_attacks": 50,
+        "clean_accuracy": 0.925,
+        "robust_accuracy": 0.72,
+        "attack_success_rate": 0.2702702702702703,
+        "robustness_gap": 0.20500000000000007
+      },
+      "adaptive_state": {
+        "budget": 90,
+        "tau": 0.4953658788917603,
+        "delta_robust": 0.35
+      }
+    },
+    {
+      "iteration": 5,
+      "n_labeled": 310,
+      "n_selected_this_iter": 90,
+      "remaining_pool": 16,
+      "retrain_result": {
+        "iteration": 5,
+        "n_samples": 90,
+        "epochs": 3,
+        "avg_loss": 0.16341608159615875,
+        "final_loss": 0.1593873239052616,
+        "dev_accuracy": 0.8382022471910112,
+        "dev_f1": 0.6703808864003364
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 186,
+        "n_robust_correct": 176,
+        "n_successful_attacks": 17,
+        "clean_accuracy": 0.93,
+        "robust_accuracy": 0.88,
+        "attack_success_rate": 0.0913978494623656,
+        "robustness_gap": 0.050000000000000044
+      },
+      "adaptive_state": {
+        "budget": 80,
+        "tau": 0.5162260939455238,
+        "delta_robust": 0.16000000000000003
+      }
+    },
+    {
+      "iteration": 6,
+      "n_labeled": 326,
+      "n_selected_this_iter": 16,
+      "remaining_pool": 0,
+      "retrain_result": {
+        "iteration": 6,
+        "n_samples": 16,
+        "epochs": 3,
+        "avg_loss": 0.12273246041613484,
+        "final_loss": 0.11883270589995865,
+        "dev_accuracy": 0.8404494382022472,
+        "dev_f1": 0.6486071673276154
+      },
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 184,
+        "n_robust_correct": 185,
+        "n_successful_attacks": 10,
+        "clean_accuracy": 0.92,
+        "robust_accuracy": 0.925,
+        "attack_success_rate": 0.05434782608695652,
+        "robustness_gap": -0.0050000000000000044
+      },
+      "adaptive_state": {
+        "budget": 70,
+        "tau": 0.5407913113368281,
+        "delta_robust": 0.04500000000000004
+      }
+    },
+    {
+      "iteration": 7,
+      "n_labeled": 326,
+      "metrics": {
+        "n_samples": 200,
+        "n_originally_correct": 184,
+        "n_robust_correct": 185,
+        "n_successful_attacks": 10,
+        "clean_accuracy": 0.92,
+        "robust_accuracy": 0.925,
+        "attack_success_rate": 0.05434782608695652,
+        "robustness_gap": -0.0050000000000000044,
+        "total_labeled": 326
+      },
+      "status": "pool_exhausted"
+    }
+  ],
+  "beta_sweep": {
+    "0.0": {
+      "n_samples": 200,
+      "n_originally_correct": 187,
+      "n_robust_correct": 178,
+      "n_successful_attacks": 17,
+      "clean_accuracy": 0.935,
+      "robust_accuracy": 0.89,
+      "attack_success_rate": 0.09090909090909091,
+      "robustness_gap": 0.04500000000000004,
+      "total_labeled": 326
+    },
+    "0.25": {
+      "n_samples": 200,
+      "n_originally_correct": 186,
+      "n_robust_correct": 180,
+      "n_successful_attacks": 10,
+      "clean_accuracy": 0.93,
+      "robust_accuracy": 0.9,
+      "attack_success_rate": 0.053763440860215055,
+      "robustness_gap": 0.030000000000000027,
+      "total_labeled": 326
+    },
+    "0.5": {
+      "n_samples": 200,
+      "n_originally_correct": 183,
+      "n_robust_correct": 185,
+      "n_successful_attacks": 9,
+      "clean_accuracy": 0.915,
+      "robust_accuracy": 0.925,
+      "attack_success_rate": 0.04918032786885246,
+      "robustness_gap": -0.010000000000000009,
+      "total_labeled": 326
+    },
+    "1.0": {
+      "n_samples": 200,
+      "n_originally_correct": 187,
+      "n_robust_correct": 181,
+      "n_successful_attacks": 13,
+      "clean_accuracy": 0.935,
+      "robust_accuracy": 0.905,
+      "attack_success_rate": 0.06951871657754011,
+      "robustness_gap": 0.030000000000000027,
+      "total_labeled": 326
+    },
+    "2.0": {
+      "n_samples": 200,
+      "n_originally_correct": 185,
+      "n_robust_correct": 177,
+      "n_successful_attacks": 14,
+      "clean_accuracy": 0.925,
+      "robust_accuracy": 0.885,
+      "attack_success_rate": 0.07567567567567568,
+      "robustness_gap": 0.040000000000000036,
+      "total_labeled": 326
+    }
+  },
+  "budget_ablation": {
+    "10": {
+      "n_samples": 200,
+      "n_originally_correct": 186,
+      "n_robust_correct": 182,
+      "n_successful_attacks": 11,
+      "clean_accuracy": 0.93,
+      "robust_accuracy": 0.91,
+      "attack_success_rate": 0.05913978494623656,
+      "robustness_gap": 0.020000000000000018,
+      "total_labeled": 326,
+      "budget": 10
+    },
+    "20": {
+      "n_samples": 200,
+      "n_originally_correct": 186,
+      "n_robust_correct": 177,
+      "n_successful_attacks": 16,
+      "clean_accuracy": 0.93,
+      "robust_accuracy": 0.885,
+      "attack_success_rate": 0.08602150537634409,
+      "robustness_gap": 0.04500000000000004,
+      "total_labeled": 326,
+      "budget": 20
+    },
+    "50": {
+      "n_samples": 200,
+      "n_originally_correct": 187,
+      "n_robust_correct": 180,
+      "n_successful_attacks": 12,
+      "clean_accuracy": 0.935,
+      "robust_accuracy": 0.9,
+      "attack_success_rate": 0.06417112299465241,
+      "robustness_gap": 0.03500000000000003,
+      "total_labeled": 326,
+      "budget": 50
+    },
+    "100": {
+      "n_samples": 200,
+      "n_originally_correct": 187,
+      "n_robust_correct": 183,
+      "n_successful_attacks": 11,
+      "clean_accuracy": 0.935,
+      "robust_accuracy": 0.915,
+      "attack_success_rate": 0.058823529411764705,
+      "robustness_gap": 0.020000000000000018,
+      "total_labeled": 326,
+      "budget": 100
+    }
+  },
+  "iter_ablation": {
+    "1": {
+      "n_samples": 200,
+      "n_originally_correct": 171,
+      "n_robust_correct": 26,
+      "n_successful_attacks": 149,
+      "clean_accuracy": 0.855,
+      "robust_accuracy": 0.13,
+      "attack_success_rate": 0.8713450292397661,
+      "robustness_gap": 0.725,
+      "total_labeled": 50,
+      "iterations": 1
+    },
+    "3": {
+      "n_samples": 200,
+      "n_originally_correct": 188,
+      "n_robust_correct": 87,
+      "n_successful_attacks": 105,
+      "clean_accuracy": 0.94,
+      "robust_accuracy": 0.435,
+      "attack_success_rate": 0.5585106382978723,
+      "robustness_gap": 0.5049999999999999,
+      "total_labeled": 120,
+      "iterations": 3
+    },
+    "5": {
+      "n_samples": 200,
+      "n_originally_correct": 184,
+      "n_robust_correct": 167,
+      "n_successful_attacks": 24,
+      "clean_accuracy": 0.92,
+      "robust_accuracy": 0.835,
+      "attack_success_rate": 0.13043478260869565,
+      "robustness_gap": 0.08500000000000008,
+      "total_labeled": 310,
+      "iterations": 5
+    },
+    "7": {
+      "n_samples": 200,
+      "n_originally_correct": 185,
+      "n_robust_correct": 180,
+      "n_successful_attacks": 16,
+      "clean_accuracy": 0.925,
+      "robust_accuracy": 0.9,
+      "attack_success_rate": 0.08648648648648649,
+      "robustness_gap": 0.025000000000000022,
+      "total_labeled": 326,
+      "iterations": 7
+    }
+  },
+  "agent_ablation": {
+    "full": {
+      "n_samples": 200,
+      "n_originally_correct": 184,
+      "n_robust_correct": 185,
+      "n_successful_attacks": 10,
+      "clean_accuracy": 0.92,
+      "robust_accuracy": 0.925,
+      "attack_success_rate": 0.05434782608695652,
+      "robustness_gap": -0.0050000000000000044,
+      "total_labeled": 326
+    },
+    "no_detection": {
+      "n_samples": 200,
+      "n_originally_correct": 187,
+      "n_robust_correct": 162,
+      "n_successful_attacks": 31,
+      "clean_accuracy": 0.935,
+      "robust_accuracy": 0.81,
+      "attack_success_rate": 0.1657754010695187,
+      "robustness_gap": 0.125,
+      "total_labeled": 326
+    },
+    "no_audit": {
+      "n_samples": 200,
+      "n_originally_correct": 186,
+      "n_robust_correct": 177,
+      "n_successful_attacks": 17,
+      "clean_accuracy": 0.93,
+      "robust_accuracy": 0.885,
+      "attack_success_rate": 0.0913978494623656,
+      "robustness_gap": 0.04500000000000004,
+      "total_labeled": 326
+    },
+    "no_adaptation": {
+      "n_samples": 200,
+      "n_originally_correct": 186,
+      "n_robust_correct": 177,
+      "n_successful_attacks": 17,
+      "clean_accuracy": 0.93,
+      "robust_accuracy": 0.885,
+      "attack_success_rate": 0.0913978494623656,
+      "robustness_gap": 0.04500000000000004,
+      "total_labeled": 326
+    },
+    "entropy_only": {
+      "n_samples": 200,
+      "n_originally_correct": 185,
+      "n_robust_correct": 178,
+      "n_successful_attacks": 14,
+      "clean_accuracy": 0.925,
+      "robust_accuracy": 0.89,
+      "attack_success_rate": 0.07567567567567568,
+      "robustness_gap": 0.03500000000000003,
+      "total_labeled": 326
+    }
+  },
+  "per_attack": {
+    "FGSM": {
+      "n_samples": 200,
+      "n_originally_correct": 185,
+      "n_robust_correct": 185,
+      "n_successful_attacks": 8,
+      "clean_accuracy": 0.925,
+      "robust_accuracy": 0.925,
+      "attack_success_rate": 0.043243243243243246,
+      "robustness_gap": 0.0
+    },
+    "Synonym": {
+      "n_samples": 200,
+      "n_originally_correct": 185,
+      "n_robust_correct": 184,
+      "n_successful_attacks": 2,
+      "clean_accuracy": 0.925,
+      "robust_accuracy": 0.92,
+      "attack_success_rate": 0.010810810810810811,
+      "robustness_gap": 0.0050000000000000044
+    },
+    "Combined": {
+      "n_samples": 200,
+      "n_originally_correct": 185,
+      "n_robust_correct": 156,
+      "n_successful_attacks": 31,
+      "clean_accuracy": 0.925,
+      "robust_accuracy": 0.78,
+      "attack_success_rate": 0.16756756756756758,
+      "robustness_gap": 0.14500000000000002
+    }
+  },
+  "cross_attack": {
+    "BERT-Attack": {
+      "n_samples": 200,
+      "n_originally_correct": 185,
+      "n_robust_correct": 185,
+      "n_successful_attacks": 2,
+      "clean_accuracy": 0.925,
+      "robust_accuracy": 0.925,
+      "attack_success_rate": 0.010810810810810811,
+      "robustness_gap": 0.0
+    },
+    "CharSwap": {
+      "n_samples": 200,
+      "n_originally_correct": 185,
+      "n_robust_correct": 179,
+      "n_successful_attacks": 6,
+      "clean_accuracy": 0.925,
+      "robust_accuracy": 0.895,
+      "attack_success_rate": 0.032432432432432434,
+      "robustness_gap": 0.030000000000000027
+    }
+  },
+  "timings": {
+    "baseline": 1283.326462507248,
+    "full_adv": 1152.1776518821716,
+    "random": 8646.080013513565,
+    "entropy": 8622.916715145111,
+    "margin": 8704.32056260109,
+    "coreset": 8765.63747882843,
+    "static_budget": 8769.255205392838,
+    "entropy_coreset": 8718.005208969116,
+    "composite": 7881.6024560928345
+  }
+}

@@ -64,6 +64,7 @@ class DataPreprocessor:
         neg_path = f"{labels_dir}/train_w_con_w_neg.jsonl"
         if os.path.exists(neg_path):
             neg_train = self._load_jsonl(neg_path)
+            neg_train["label_id"] = neg_train["label_id"].astype(object)
             neg_train.loc[neg_train["label_id"] == 1906, "label_id"] = "OTHER"
             labels_train = pd.concat([labels_train, neg_train], ignore_index=True)
             print(f"Added hard negatives: +{len(neg_train)} samples -> {len(labels_train)} total")

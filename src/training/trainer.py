@@ -261,39 +261,48 @@ class AdversarialTrainer:
 
             # Get embeddings
             embeddings = self.classifier.get_embeddings(input_ids)
-            embeddings.retain_grad()
+            embeddings_for_grad = embeddings.clone().detach().requires_grad_(True)
 
-            # Clean forward pass
+            # Generate position_ids for inputs_embeds forward passes
+            position_ids = torch.arange(input_ids.shape[1], device=self.device).unsqueeze(0).expand(input_ids.shape[0], -1)
+
+            # Forward pass on detached embeddings to get FGSM gradient
+            grad_outputs = self.model(
+                inputs_embeds=embeddings_for_grad,
+                attention_mask=attention_mask,
+                position_ids=position_ids
+            )
+            grad_loss = self.criterion(grad_outputs.logits, labels)
+            grad_loss.backward()
+
+            # Generate adversarial embeddings using gradient sign
+            grad_sign = embeddings_for_grad.grad.sign()
+            adv_embeddings = (embeddings + self.epsilon * grad_sign).detach().requires_grad_(True)
+
+            # Now compute clean and adversarial losses together for proper gradient flow
             clean_outputs = self.model(
                 inputs_embeds=embeddings,
                 attention_mask=attention_mask,
-                input_ids=None
+                position_ids=position_ids
             )
             clean_loss = self.criterion(clean_outputs.logits, labels)
 
-            # Backprop for gradient
-            clean_loss.backward(retain_graph=True)
-
-            # Generate adversarial embeddings
-            adv_embeddings = self.fgsm_attack(embeddings, self.epsilon)
-
-            # Adversarial forward pass
             adv_outputs = self.model(
                 inputs_embeds=adv_embeddings,
                 attention_mask=attention_mask,
-                input_ids=None
+                position_ids=position_ids
             )
             adv_loss = self.criterion(adv_outputs.logits, labels)
 
-            # Combined loss
+            # Combined loss — single backward pass, clean gradient flow
             combined_loss = (
                 self.clean_weight * clean_loss +
                 self.adv_weight * adv_loss
             )
 
-            # Update weights
             self.optimizer.zero_grad()
             combined_loss.backward()
+            torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
             self.optimizer.step()
 
             total_loss += combined_loss.item()

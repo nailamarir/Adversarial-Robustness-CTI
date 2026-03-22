@@ -169,7 +169,18 @@ def get_config() -> Config:
 MODELS_TO_COMPARE = {
     "distilbert": "distilbert-base-uncased",
     "secbert": "jackaduma/SecBERT",
+    "secroberta": "jackaduma/SecRoBERTa",
 }
+
+# All selection strategies for paper experiments
+SELECTION_STRATEGIES = [
+    "entropy",        # Pure Entropy (φ_H)
+    "margin",         # Pure Margin (φ_M)
+    "composite",      # Composite (φ_H + β·φ_M) — A3L
+    "coreset",        # Core-Set (greedy k-center)
+    "entropy_coreset", # Entropy + Core-Set hybrid
+    "random",         # Random baseline
+]
 
 
 # Label mapping (MITRE ATT&CK technique IDs)

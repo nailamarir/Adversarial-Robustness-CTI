@@ -41,11 +41,18 @@ class CTIClassifier:
 
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
 
+        # DistilBERT uses 'seq_classif_dropout' / 'dropout'; BERT/RoBERTa use 'hidden_dropout_prob'
+        dropout_kwargs = {}
+        if "distilbert" in self.model_name.lower():
+            dropout_kwargs["seq_classif_dropout"] = 0.2
+        else:
+            dropout_kwargs["hidden_dropout_prob"] = 0.2
+            dropout_kwargs["attention_probs_dropout_prob"] = 0.2
+
         self.model = AutoModelForSequenceClassification.from_pretrained(
             self.model_name,
             num_labels=self.num_labels,
-            hidden_dropout_prob=0.2,
-            attention_probs_dropout_prob=0.2,
+            **dropout_kwargs,
         )
 
         self.model.to(self.device)
@@ -61,15 +68,19 @@ class CTIClassifier:
 
     def get_embeddings(self, input_ids: torch.Tensor) -> torch.Tensor:
         """Get word embeddings from input IDs"""
-        # Handle different model architectures
-        if hasattr(self.model, 'bert'):
-            return self.model.bert.embeddings.word_embeddings(input_ids)
-        elif hasattr(self.model, 'distilbert'):
+        # Check distilbert/roberta before bert — SecRoBERTa has 'roberta', SecBERT has 'bert'
+        if hasattr(self.model, 'distilbert'):
             return self.model.distilbert.embeddings.word_embeddings(input_ids)
         elif hasattr(self.model, 'roberta'):
             return self.model.roberta.embeddings.word_embeddings(input_ids)
+        elif hasattr(self.model, 'bert'):
+            return self.model.bert.embeddings.word_embeddings(input_ids)
         else:
             raise ValueError(f"Unsupported model architecture: {type(self.model)}")
+
+    def _get_position_ids(self, seq_length: int, batch_size: int = 1) -> torch.Tensor:
+        """Generate position IDs for inputs_embeds forward pass."""
+        return torch.arange(seq_length, device=self.device).unsqueeze(0).expand(batch_size, -1)
 
     def forward_with_embeddings(
         self,
@@ -77,10 +88,11 @@ class CTIClassifier:
         attention_mask: torch.Tensor
     ) -> torch.Tensor:
         """Forward pass using embeddings instead of input IDs"""
+        position_ids = self._get_position_ids(embeddings.shape[1], embeddings.shape[0])
         outputs = self.model(
             inputs_embeds=embeddings,
             attention_mask=attention_mask,
-            input_ids=None
+            position_ids=position_ids
         )
         return outputs
 
