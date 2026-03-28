@@ -4,9 +4,7 @@ __pycache__/
 *.pt
 venv/
 AnnoCTR/
-outputs/*.log
-outputs/smoke_test*/
-outputs/temp/
-outputs/paper_final/*.log
-outputs/models/
+outputs/
+FinalPaper/
 nltk_data/
+*.log
